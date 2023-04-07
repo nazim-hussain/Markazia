@@ -1,0 +1,271 @@
+<div class="card-Box">
+  <!-- head -->
+  <!-- first section -->
+  <div class="flex-between">
+    <div class="headingText">Collection Details</div>
+    <div
+      class="headButton"
+      [ngStyle]="{
+        'background-color': viewDetailsDirectPayment?.statusObj?.lookupBGColor,
+        color: viewDetailsDirectPayment?.statusObj?.lookupTextColor
+      }"
+    >
+      <span class="headButtonText">{{
+        viewDetailsDirectPayment?.statusObj?.translations[0]?.lookupName
+      }}</span>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- second section -->
+
+  <!-- third Section -->
+
+  <div class="flex-between" style="margin-top: 25px">
+    <!-- grand amount -->
+    <div class="flex-between" style="gap: 15px">
+      <div class="mdtext">Grand Amount</div>
+      <div class="amountButton mdtext">
+        {{ viewDetailsDirectPayment?.grandAmount + " " + "JD" }}
+      </div>
+    </div>
+
+    <!-- deposit amounts -->
+    <div class="flex-between" style="gap: 15px">
+      <div class="mdtext">Grand Paid</div>
+      <div class="amountButton mdtext">
+        {{ viewDetailsDirectPayment?.grandPaid + " " + "JD" }}
+      </div>
+    </div>
+
+    <!-- difference amounts -->
+    <div class="flex-between" style="gap: 15px">
+      <div class="mdtext">Remaining to pay</div>
+      <div class="amountButton mdtext">
+        {{ viewDetailsDirectPayment?.remainingAmount + " " + "JD" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- input search box -->
+<div class="row applyMargin">
+  <div class="col-md-5"></div>
+  <div class="col-md-5"></div>
+  <div class="col-md-2 d-flex justify-content-end btnadd"></div>
+
+  <div class="col-md-6"></div>
+  <div class="col-md-6 text-end">
+    <!-- <div class="total">
+      <p style="color: #dc3545">Total No. {{ totalRecords }}</p>
+    </div> -->
+  </div>
+</div>
+
+<!-- table -->
+<div class="row">
+  <div
+    class="col-md-12"
+    *ngIf="collectionsPayment; let collectionsPayment; else: loading"
+  >
+    <div class="card-table mt-2 p-4">
+      <div class="flex-between">
+        <div class="mdtext">Receipts List</div>
+        <div class="total">
+          <p style="color: #dc3545">
+            Total No. {{ collectionsPayment?.length }}
+          </p>
+        </div>
+      </div>
+      <div class="separator2"></div>
+
+      <div class="table-responsive mt-2">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">
+                <button
+                  class="btn"
+                  [disabled]="collectionsPayment?.length == 0"
+                >
+                  Receipt No
+                </button>
+              </th>
+              <th scope="col">
+                <button
+                  class="btn"
+                  [disabled]="collectionsPayment?.length == 0"
+                >
+                  Grand Paid
+                </button>
+              </th>
+              <th scope="col">
+                <button
+                  class="btn"
+                  [disabled]="collectionsPayment?.length == 0"
+                >
+                  Date
+                </button>
+              </th>
+              <th scope="col">
+                <button
+                  class="btn"
+                  [disabled]="collectionsPayment?.length == 0"
+                >
+                  Collected By
+                </button>
+              </th>
+
+              <th scope="col">
+                <button
+                  class="btn"
+                  [disabled]="collectionsPayment?.length == 0"
+                >
+                  Action
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of collectionsPayment">
+              <td>{{ item?.orderCollectionId }}</td>
+              <td>{{ item?.grandPaid }}</td>
+              <td>{{ item?.collectionAt | date }}</td>
+              <td>{{ item?.collectedBy?.fullName }}</td>
+
+              <td style="cursor: pointer">
+                <div class="btn-edit">View Details</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="not-found" *ngIf="collectionsPayment?.length == 0">
+        <app-not-found></app-not-found>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <ng-template #loading>
+      <div>
+        <app-loading></app-loading>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="flex-end mt-3">
+  <p style="color: #dc3545">
+    Invoice No. {{ viewDetailsDirectPayment?.orderInvoiceSerial }}
+  </p>
+</div>
+<!-- cards -->
+<div class="flex-two mt-3" style="gap: 28px">
+  <div class="card1">
+    <div class="headingText">Customer Details</div>
+    <div class="flex-start mt-2">
+      <div class="profile" *ngIf="newName">
+        {{
+          (newName[0] | slice : 0 : 1) +
+            " " +
+            (newName[newName.length - 1] | slice : 0 : 1)
+        }}
+      </div>
+      <div class="flex-column">
+        <div class="mdtext">
+          {{ viewDetailsDirectPayment?.customer?.customerName }}
+        </div>
+        <div class="smText">
+          {{ viewDetailsDirectPayment?.customer?.email }}
+        </div>
+      </div>
+    </div>
+    <div class="flex-start mt-2">
+      <div class="profile" style="visibility: hidden"></div>
+      <div class="flex-column">
+        <div class="mdtext">Customer Phone</div>
+        <div class="smText">
+          {{ viewDetailsDirectPayment?.customer?.mobile }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card2">
+    <!-- head -->
+    <!-- first section -->
+    <div class="flex-between">
+      <div class="headingText">Vehicle Details</div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- second section -->
+
+    <!-- third Section -->
+
+    <div class="flex-between" style="margin-top: 25px">
+      <!-- grand amount -->
+      <div class="flex-column" style="gap: 15px">
+        <div class="mdtext">Vehicle</div>
+        <div class="smText">
+          {{
+            viewDetailsDirectPayment?.vin?.brandName +
+              " " +
+              viewDetailsDirectPayment?.vin?.modelName +
+              " " +
+              viewDetailsDirectPayment?.vin?.modelYear
+          }}
+        </div>
+      </div>
+
+      <!-- deposit amounts -->
+      <div class="flex-column" style="gap: 15px">
+        <div class="mdtext">Cash Card No</div>
+        <div class="smText">
+          {{ viewDetailsDirectPayment?.cashCardNo }}
+        </div>
+      </div>
+
+      <!-- difference amounts -->
+      <div class="flex-column" style="gap: 15px">
+        <div class="mdtext">Opportunity No</div>
+        <div class="smText">
+          {{ viewDetailsDirectPayment?.directPaymentSalesOrderOpportunityNo }}
+        </div>
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="flex-between" style="margin-top: 25px">
+      <!-- grand amount -->
+      <div class="flex-column" style="gap: 15px">
+        <div class="mdtext">Sales Consultant</div>
+        <div class="smText">
+          {{ viewDetailsDirectPayment?.salesPerson?.fullName }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  -->
+
+<div class="card-Box mt-4">
+  <!-- head -->
+
+  <div class="headingText">Sales Note</div>
+  <div class="greyBox mdtext mt-3">
+    {{ viewDetailsDirectPayment?.salesNote }}
+  </div>
+</div>
+
+<div class="flex-end mt-3">
+  <button
+    [routerLink]="['/transactions-history']"
+    class="btn dropdownButton"
+    type="button"
+    id="dropdownMenuButton"
+  >
+    Close
+  </button>
+</div>

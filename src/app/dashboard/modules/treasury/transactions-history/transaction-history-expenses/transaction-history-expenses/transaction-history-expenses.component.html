@@ -1,0 +1,441 @@
+<div class="card-page">
+  <div class="row applyMargin">
+    <div class="col-md-5">
+      <div class="input-group search-box">
+        <button
+          class="btn"
+          type="button"
+          id="button-addon1"
+          (click)="removeSearch()"
+        >
+          <i class="fa-solid fa-search"></i>
+        </button>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          [(ngModel)]="searchText"
+          (keyup)="searchExpenses($event)"
+        />
+        <button
+          class="btn"
+          type="button"
+          id="button-addon1"
+          [hidden]="searchText.length == 0"
+          (click)="removeSearch()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <select
+        class="form-select form-select-lg mb-3"
+        aria-label=".form-select-lg example"
+        placeholder="Category.."
+        (change)="changeCategory($event.target)"
+      >
+        <option value="" selected>Category</option>
+        <option *ngFor="let item of categoryList" [value]="item?.id">
+          {{ item?.name[0]?.lookupName }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <div class="dropdown">
+        <button
+          class="btn dropdownButton"
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="fa-regular fa-plus"></i> More Filter
+        </button>
+        <ul class="dropdown-menu menu" aria-labelledby="dropdownMenuButton">
+          <li>
+            <a class="dropdown-item"
+              ><input
+                type="checkbox"
+                [(ngModel)]="branch"
+                class="checkBox"
+                (change)="filterBranch($event.target)"
+              />
+              &nbsp; Branch</a
+            >
+            <a class="dropdown-item"
+              ><input
+                type="checkbox"
+                [(ngModel)]="register"
+                class="checkBox"
+                (change)="filterRegisterName($event.target)"
+              />
+              &nbsp; Register Name</a
+            >
+            <a class="dropdown-item"
+              ><input
+                type="checkbox"
+                [(ngModel)]="registerNo"
+                class="checkBox"
+                (change)="filterRegisterNo($event.target)"
+              />
+              &nbsp; Register No.</a
+            >
+            <a class="dropdown-item"
+              ><input
+                type="checkbox"
+                [(ngModel)]="employee"
+                class="checkBox"
+                (change)="filterEmployee($event.target)"
+              />
+              &nbsp;Employee</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-3 d-flex justify-content-end btnadd">
+      <!-- <button (click)="openModalExpense()" class="btn btn-add"> <img src="assets/images/plus.png" alt=""> Add Expense
+            </button> -->
+    </div>
+    <div class="filterFlex">
+      <!-- branch -->
+      <div class="dropdown" *ngIf="branch">
+        <button
+          class="btn dropdownFilters"
+          type="button"
+          id="dropdownBranch"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Branch : <span *ngIf="newDropdownBranch.length == 0">All</span>
+          <div class="d-flex" *ngFor="let item of newDropdownBranch">
+            {{ item + "," }}
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+          <i
+            class="fa-regular fa-circle-xmark"
+            (click)="branch = false; removeBranchFilter()"
+          ></i>
+        </button>
+        <ul class="dropdown-menu menu2" aria-labelledby="dropdownBranch">
+          <li>
+            <a
+              class="dropdown-item"
+              *ngFor="let item of branchesList; let i = index"
+              ><input
+                type="checkbox"
+                class="checkBox"
+                (change)="applyBranch(item, $event)"
+              />
+              &nbsp; {{ item.branchName }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <!-- register Name -->
+      <div class="dropdown" *ngIf="register">
+        <button
+          class="btn dropdownFilters"
+          type="button"
+          id="dropdownRegister"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Register Name :
+          <span *ngIf="newDropdownRegisterName.length == 0">All</span>
+          <div class="d-flex" *ngFor="let item of newDropdownRegisterName">
+            {{ item + "," }}
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+          <i
+            class="fa-regular fa-circle-xmark"
+            (click)="removeRegisterNameFilter()"
+          ></i>
+        </button>
+        <ul class="dropdown-menu menu2" aria-labelledby="dropdownRegister">
+          <li>
+            <a
+              class="dropdown-item"
+              *ngFor="let item of registersList; let i = index"
+              ><input
+                type="checkbox"
+                class="checkBox"
+                [value]="item.registersName"
+                (change)="applyRegisterName(item, $event)"
+              />
+              &nbsp; {{ item.registersName }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <!-- register no -->
+      <div class="dropdown" *ngIf="registerNo">
+        <button
+          class="btn dropdownFilters"
+          type="button"
+          id="dropdownRegisterNo"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Register No :
+          <span *ngIf="newDropdownRegisterNo.length == 0">All</span>
+          <div class="d-flex" *ngFor="let item of newDropdownRegisterNo">
+            {{ item + "," }}
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+          <i
+            class="fa-regular fa-circle-xmark"
+            (click)="removeRegisterNoFilter()"
+          ></i>
+        </button>
+        <ul class="dropdown-menu menu2" aria-labelledby="dropdownRegisterNo">
+          <li>
+            <a
+              class="dropdown-item"
+              *ngFor="let item of registersList; let i = index"
+              ><input
+                type="checkbox"
+                class="checkBox"
+                (change)="applyRegisterNo(item, $event)"
+                [value]="item.id"
+              />
+              &nbsp; {{ item.id }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <!-- employee -->
+      <div class="dropdown" *ngIf="employee">
+        <button
+          class="btn dropdownFilters"
+          type="button"
+          id="dropdownEmployee"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Employee : <span *ngIf="newDropdownEmployee.length == 0">All</span>
+
+          <div class="d-flex" *ngFor="let item of newDropdownEmployee">
+            {{ item + "," }}
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+          <i
+            class="fa-regular fa-circle-xmark"
+            (click)="removeEmployeeFilter()"
+          ></i>
+        </button>
+        <ul class="dropdown-menu menu2" aria-labelledby="dropdownEmployee">
+          <li>
+            <a
+              class="dropdown-item"
+              *ngFor="let item of EmployeesList; let i = index"
+              ><input
+                type="checkbox"
+                class="checkBox"
+                [value]="item.fullName"
+                (change)="applyEmployee(item, $event)"
+              />
+              &nbsp; {{ item.fullName }}</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <!-- <div class="total">
+            <h4>Registers Petty Cash Amounts</h4>
+          </div> -->
+    </div>
+    <div class="col-md-6 text-end">
+      <div class="total">
+        <p>Total No. {{ totalRecords }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="TreasuryExpensesReport; let TreasuryExpensesReport">
+    <div class="col-md-12">
+      <div class="card-table mt-2">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByBranch()"
+                  >
+                    Invoice No.
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 2"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 3"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByRegisterNo()"
+                  >
+                    Category
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 4"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 5"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByDate()"
+                  >
+                    Date
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 6"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 7"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByCashier()"
+                  >
+                    Employee
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 8"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 9"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByAmount()"
+                  >
+                    Amount
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 10"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 11"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    class="btn"
+                    [disabled]="TreasuryExpensesReport?.length == 0"
+                    (click)="sortByStatus()"
+                  >
+                    Status
+                    <i
+                      class="fa-solid fa-arrow-up-long"
+                      [class.active]="sort == 12"
+                    ></i>
+                    <i
+                      class="fa-solid fa-arrow-down-long"
+                      [class.active]="sort == 13"
+                    ></i>
+                  </button>
+                </th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of TreasuryExpensesReport">
+                <td>{{ item?.invoiceNo }}</td>
+                <td>{{ item?.category[0]?.lookupName }}</td>
+                <td>{{ item?.createdAt | date }}</td>
+                <td>{{ item?.createdBy?.fullName }}</td>
+                <td>{{ item?.expenseTotalAmount }}</td>
+                <td>
+                  <div
+                    class="headButton headButtonText"
+                    [ngStyle]="{
+                      'background-color': item?.statusObj?.lookupBGColor,
+                      color: item?.statusObj?.lookupTextColor
+                    }"
+                  >
+                    {{ item?.statusObj?.description }}
+                  </div>
+                </td>
+
+                <td>
+                  <button
+                    class="btn btn-edit"
+                    (click)="openModalExpenseView(item)"
+                  >
+                    <img src="assets/images/eye.png" alt="" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="not-found" *ngIf="TreasuryExpensesReport?.length == 0">
+          <app-not-found></app-not-found>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <ng-template #loading>
+        <div>
+          <app-loading></app-loading>
+        </div>
+      </ng-template>
+    </div>
+    <div class="col-md-6" [hidden]="TreasuryExpensesReport?.length == 0">
+      <h6 class="showing">
+        Showing
+        <span>
+          {{ (pageNo + 1) * 6 - 5 }} -
+          {{
+            TreasuryExpensesReport?.length == 6
+              ? (pageNo + 1) * 6
+              : totalRecords
+          }}
+        </span>
+        from <span> {{ totalRecords }} </span> data
+      </h6>
+    </div>
+    <div class="col-md-6" [hidden]="totalRecords < 7">
+      <ul class="pagination">
+        <li class="page-item" *ngFor="let page of pages">
+          <button
+            class="page-link"
+            (click)="setPage(page)"
+            [ngClass]="{ active: pageNo === page }"
+            [disabled]="pageNo === page"
+          >
+            {{ page + 1 }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="message" *ngIf="type == 'success'">
+
+  <div>
+    <i class="fa-regular fa-circle-check"></i>
+  </div>
+  <h3> Successfully Closing!</h3>
+  <p *ngIf="remainedSessions != 0">Your Register Closing is completed <br> successfully, you have {{remainedSessions}}
+    session</p>
+
+  <p *ngIf="remainedSessions == 0">Your Closing is completed successfully</p>
+
+  <div class="btns-group">
+    <button type="button" *ngIf="remainedSessions != 0" (click)="openNewSession()" class="btn btn-save mb-2">Open New
+      Session</button>
+    <button type="button" class="btn btn-cancel" (click)="logOut();activeModal.close('Close click')"> Logout </button>
+  </div>
+</div>
+
+<div class="message" *ngIf="type == 'error'">
+
+  <div>
+    <i class="fa-regular fa-circle-xmark"></i>
+  </div>
+  <br>
+
+  <h5 *ngFor=" let item of messageError"> {{item.ErrorMessageEn || item.errorMessageEn}} </h5>
+
+  <div class="">
+    <div class="btns-group my-2">
+      <button type="button" class="btn btn-cancel" (click)="backToStepTwo()"> Back </button>
+    </div>
+  </div>
+</div>

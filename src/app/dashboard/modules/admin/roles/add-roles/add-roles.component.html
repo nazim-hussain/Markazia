@@ -1,0 +1,145 @@
+<!-- <h4>Roles</h4> -->
+<div class="card-page">
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="card-form py-3 overflow-hidden position-relative">
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group overflow-hidden position-relative mb-0">
+                <label>Role Name *</label>
+                <input formControlName="name" name="name" type="text" class="form-control" placeholder="Type..."
+                  required minlength="6" maxlength="30" (keypress)="checkSpecialChar($event)" OnlyCharacter
+                  autocomplete="off">
+                <button class="btn btn-remove" *ngIf="formGroup.get('name').value" (click)="removeBranchName()"><i
+                    class="fa-solid fa-xmark"></i> </button>
+                <div
+                  *ngIf="submitted && formValid['name'].invalid ||  formValid['name'].invalid && (formValid['name'].dirty || formValid['name'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['name'].errors">
+                  </span>
+                  <span class="error" *ngIf="formValid['name'].errors['required']"> This element is required,
+                    please fill.</span>
+                  <span *ngIf="formValid['name'].errors['minlength']">
+                    <span class="error"> Role name length must be between 6 and 30 characters.</span>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4 ">
+              <div class="d-flex justify-content-end align-items-center pt30">
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="indoor" value="option1" formControlName="indoor">
+                  <label class="form-check-label" for="indoor"> Indoor </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="outdoor" value="option2"
+                    formControlName="outdoor">
+                  <label class="form-check-label" for="outdoor"> Outdoor </label>
+                </div>
+
+                <div class="form-check form-switch" style="margin-top: -16px;">
+                  <label class="labelactive">Active </label>
+                  <input class="form-check-input" [(ngModel)]="isStatus" name="isStatus" type="checkbox" role="switch"
+                    (change)="chooseStatus()" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <!-- <div class="edit-btn" [hidden]="!branchId">
+                <button class="btn" (click)="toEdit()"><i class="fa-solid fa-pen"></i> </button>
+              </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Default Permissions </h3>
+        </div>
+        <div class="main-category mt-0" *ngFor="let category of roles; let i = index;">
+
+          <div class="cat-head">
+            <h3>{{category.perCatName}} </h3>
+            <button type="button" class="btn btn-book" (click)="collapseList(category,i)">
+              <i *ngIf="i!=ExpandRow" class="fa-solid fa-chevron-down"></i>
+              <i *ngIf="i==ExpandRow" class="fa-solid fa-chevron-up"></i></button>
+          </div>
+          <div class="bodyroles" *ngIf="i==ExpandRow ">
+            <!-- || isEdit == true -->
+            <hr>
+            <div class="overlay-ba" *ngIf="i != catRow && isEdit"></div>
+            <!-- <div class="overlay-ba" *ngIf="!isShowpermisionsRoles && isEdit"></div> -->
+            <div class="edit-btn float-end" *ngIf="isEdit">
+              <!-- && catNo == i -->
+              <button class="btn" type="button" (click)="editrolesList(i)">
+                <!-- <i class="fa-solid fa-pen" *ngIf="isShowpermisionsRoles"></i> -->
+                <img src="assets/images/save.png" *ngIf="isShowpermisionsRoles && catRow == i" class="save-img" alt="">
+                <img src="assets/images/edit.png" *ngIf="!isShowpermisionsRoles || catRow != i" alt="">
+              </button>
+            </div>
+            <div class="cat-list" *ngFor="let item of category.permissionSubCategories">
+              <div>
+                <h4> {{item.perSubCatName}} </h4>
+              </div>
+              <div *ngFor="let  sub of item.permissionItems">
+                <div class="cat-sub">
+                  <div class="form-check form-check-inline"
+                    *ngIf="sub.perItemName == 'View Only' || sub.perItemName == 'View & Edit' || sub.perItemName == 'View & Manage'">
+                    <input class="form-check-input" type="checkbox" id="{{sub.permissionItemId}}"
+                      [value]="sub.permissionItemId" (change)="pushPermissionItemId($event,item,sub)"
+                      [checked]="isChecked(sub.permissionItemId)">
+                    <label class="form-check-label" [for]="sub.permissionItemId">
+                      {{sub.perItemName}} </label>
+                  </div>
+                  <!-- [checked]="sub.selected"  -->
+                  <!-- [checked]="rolePermissions.includes(sub.permissionItemId) == true"  -->
+                  <div class="form-check form-check-inline" *ngIf="sub.perItemName == 'Yes' || sub.perItemName == 'No'">
+                    <input class="form-check-input" type="radio" name="{{ item.permissionSubCatId}}"
+                      id="{{sub.permissionItemId}}" [value]="sub.permissionItemId"
+                      (change)="pushPermissionItemId($event,item,sub)" [checked]="isChecked(sub.permissionItemId)">
+                    <label class="form-check-label" for="{{sub.permissionItemId}}">
+                      {{sub.perItemName}}
+                    </label>
+                  </div>
+
+                </div>
+                <div class="sub-details">
+                  <!-- [checked]="details.selected" -->
+
+                  <div class="form-check form-check-inline" *ngFor="let details of sub.permissionItemDetails">
+                    <input class="form-check-input" type="checkbox" [value]="details.permissionItemDetailsId"
+                      id="d-{{details.permissionItemDetailsId}}"
+                      (change)="pushPermissionItemDetailId($event,details.permissionItemId, sub)"
+                      [checked]="isChecked(sub.permissionItemId)"
+                      [disabled]="details.permissionItemId == sub.permissionItemId && !isChecked(sub.permissionItemId) ">
+                    <label class="form-check-label" for="d-{{details.permissionItemDetailsId}}">
+                      {{details.perItemDetailsName}}
+                    </label>
+                    <!-- [disabled]="details.permissionItemId == sub.permissionItemId &&  sub.permissionItemId == false" -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="col-md-12">
+        <div class="btns-group">
+          <button type="button" class="btn btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-save" *ngIf="!isLoading"> {{!isEdit ? 'Add' : 'Save'}} </button>
+          <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+              class="fa-solid fa-circle-notch fa-spin"></i></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

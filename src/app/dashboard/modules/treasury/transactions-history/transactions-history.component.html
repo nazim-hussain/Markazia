@@ -1,0 +1,28 @@
+<div class="card-page">
+  <div class="row">
+    <div class="col-md-12 display-flex">
+      <div class="branchesTypes">
+        <button
+          class="btn active"
+          (click)="goToPage(1)"
+          [class.active]="selected == 1"
+        >
+          Collections
+        </button>
+        <button
+          class="btn"
+          (click)="goToPage(2)"
+          [class.active]="selected == 2"
+        >
+          Expesnses
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-transaction-history-collections
+  *ngIf="selected == 1"
+></app-transaction-history-collections>
+<app-transaction-history-expenses
+  *ngIf="selected == 2"
+></app-transaction-history-expenses>

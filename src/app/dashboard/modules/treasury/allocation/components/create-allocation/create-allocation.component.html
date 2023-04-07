@@ -1,0 +1,206 @@
+
+<div id="create-allocation">
+    <div class="create-allocation-container">
+        
+        <div class="row">
+            <div class="col-md-12">
+              <div class="create-allocation-order-container container-padding">
+                <h4 class="title">Create Allocation Order</h4>
+                <div class="hr"></div>
+        
+                <!-- create allocation order table here -->
+                <div class="data-table">
+                    <div class="cash-cheques-container">
+                        
+                        <div class="cheque-amount">
+                            <span>Cash Amount</span>
+                        </div>
+                        <div class="cheque-amount" style="height: 80px;">
+                            <span>Cheques Amount</span>
+                        </div>
+                        <div class="cheque-amount" style="height: 80px;">
+                            <span>PDC Cheques Amount</span>
+                        </div>
+                    </div>
+            
+                    <div class="card-table" *ngIf="mainFundCashData; else: mainfundloading;">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col"></th>
+                                <th scope="col"><button class="btn">Main Fund Current Amounts</button></th>
+                                <th scope="col"><button class="btn">Distributed Amounts</button></th>
+                                <th scope="col"><button class="btn">Difference</button></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let item of mainFundCashData; let i = index">
+                                <td>{{item.currency[0].lookupName}}</td>
+                                <td> {{item.amount}} </td>
+                                <td>{{distributedAmount[i]}}</td>
+                                <td>{{difference[i]}}</td>
+                              </tr>
+                
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-12">
+                    <ng-template #mainfundloading>
+                      <div>
+                        <app-loading></app-loading>
+                      </div>
+                    </ng-template>
+                </div>
+        
+            
+            </div>
+        
+            </div>
+            <div class="col-md-12">
+                <ng-template #loading>
+                  <div>
+                    <app-loading></app-loading>
+                  </div>
+                </ng-template>
+              </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 sage-distributed-table">
+                <div class="create-allocation-order-container sage-accounts-table">
+                    <h4 class="title">Sage Bank Accounts</h4>
+                    <div class="hr"></div>
+                    <div class="sage-bank-account-container">
+                        <div class="col-md-12" *ngIf="sageBankAccountData; else: loading">
+                            <div class="card-table mt-2">
+                              <div class="table-responsive">
+                                <table class="table sage-bank-account-table">
+                                  <thead>
+                                      <tr>
+                                        <th scope="col">
+                                          <button class="btn" [disabled]="mainFundCashData?.length == 0" (click)="sortByAccountName()">Bank Name
+                                            <i class="fa-solid fa-arrow-up-long" [class.active]="sort == 1"></i>
+                                            <i class="fa-solid fa-arrow-down-long" [class.active]="sort == 2"></i>
+                                          </button>
+                                        </th>
+                                        <th scope="col">
+                                          <button class="btn" [disabled]="mainFundCashData?.length == 0" (click)="sortByAccountName()">Account Name
+                                            <i class="fa-solid fa-arrow-up-long" [class.active]="sort == 3"></i>
+                                            <i class="fa-solid fa-arrow-down-long" [class.active]="sort == 4"></i>
+                                          </button>
+                                        </th>
+                                      <th scope="col"> <button class="btn" [disabled]="mainFundCashData?.length == 0" (click)="sortByAccountNo()">
+                                         Account No
+                                          <i class="fa-solid fa-arrow-up-long" [class.active]="sort == 5"></i>
+                                          <i class="fa-solid fa-arrow-down-long" [class.active]="sort == 6"></i>
+                                        </button></th>
+                                      <th scope="col"> <button class="btn" [disabled]="mainFundCashData?.length == 0" (click)="sortByAmount()">
+                                          Amount
+                                          <i class="fa-solid fa-arrow-up-long" [class.active]="sort == 7"></i>
+                                          <i class="fa-solid fa-arrow-down-long" [class.active]="sort == 8"></i>
+                                        </button></th>
+                                      <th scope="col"> <button class="btn" [disabled]="mainFundCashData?.length == 0" (click)="sortByCurrency()">
+                                          Currency
+                                          <i class="fa-solid fa-arrow-up-long" [class.active]="sort == 7"></i>
+                                          <i class="fa-solid fa-arrow-down-long" [class.active]="sort == 8"></i>
+                                        </button></th>
+                                      <th scope="col"> <button class="btn" [disabled]="mainFundCashData?.length == 0">
+                                          Percentage
+                                        </button></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let item of sageBankAccountData">
+                                      <td> {{item.bankName}} </td>
+                                      <td> {{item.accountName}} </td>
+                                      <td> {{item.accountNo}} </td>
+                                      <td> {{item.amount}} </td>
+                                      <td> {{item.currency[0].lookupName}} </td>
+                                      <td> {{item.accountPercentage}} % </td>
+                                    </tr>
+                      
+                                  </tbody>
+                                </table>
+                              </div>
+                              
+                              <div class="not-found"  *ngIf="sageBankAccountData?.length == 0">
+                                  <app-not-found></app-not-found>
+                              </div>
+                              <ng-template #loading>
+                                <div>
+                                  <app-loading></app-loading>
+                                </div>
+                              </ng-template>
+                            </div>
+                      
+                        </div>
+                    </div>
+                </div>
+                <div class="create-allocation-order-container distributed-amount-table">
+                    <h4 class="title">Distribute Amounts</h4>
+                    <div class="hr"></div>
+                    <div class="card-table mt-2">
+                        <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                  <tr>
+                                  <th scope="col"> <button class="btn"> Distributed Amounts </button></th>
+                                  <th scope="col"> <button class="btn"> Percentage </button></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let item of sageBankAccountData; let i = index;">
+                                  <td>  <input name="categoryName" type="number" class="form-control" placeholder="0000"
+                                (input)="onInputChage($event, i)"></td>
+                                  <td> {{percentage[i] | number: '1.0-0'}} % </td>
+                                </tr>
+                  
+                              </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="total-distributed-amount-container">
+                <div class="distributed-total-amount">
+                  <h5>
+                   Total Distributed Amount
+                  </h5>
+                  <div class="amount">
+                    <span class="currency-format">{{totalDistributedAmount | number }} </span>
+                    
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btns-group mb-0 mx-0 mt-3">
+                    <!-- (click)="activeModal.close('Close click')" -->
+                    <button type="button" class="btn btn-cancel">Cancel</button>
+                    <!-- (click)="submit()" -->
+                    <button type="submit" class="btn btn-save" (click)="createAllocationOrder()"> Create
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

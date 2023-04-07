@@ -1,0 +1,28 @@
+.card-form {
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  hr {
+    margin: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.btn-remove {
+  position: absolute;
+  right: 0px;
+  top: 37px;
+  color: #999;
+}
+.btn-addemp {
+  background-color: #dc3545;
+  font-size: 14px;
+  color: #fff;
+  padding: 10px 30px;
+}
+.btnremove-emp {
+  background-color: #e0e0e0;
+  color: #dc3545;
+  padding: 10px 15px;
+}

@@ -1,0 +1,106 @@
+
+
+<div *ngIf="sharedService.IsFoundIPAddress">
+  <app-no-ip-address></app-no-ip-address>
+</div>
+
+
+<div class="card-page" *ngIf="!sharedService.IsFoundIPAddress">
+  <div class="row" *ngIf="sharedService.getRegister">
+    <div class="col-md-12">
+      <div class="top-details">
+        <p> Date <span> {{currentDate | date:' d MMM y ' }} </span> &nbsp;
+          Time <span> {{currentDate | date:' hh:mm:ss a' }} </span> </p>
+        <p *ngIf="isShow">
+          Register <span> {{registerName}} </span> Branch <span> {{branchName}} </span>
+        </p>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="!isShow">
+      <div class="card-collect">
+        <div class="open-reg">
+          <div class="bgimg">
+            <img src="assets/images/locker.png" alt="">
+          </div>
+          <h3>Welcome To Register {{registerName}} {{registerId}} in Branch {{branchName}} - {{cityName}}</h3>
+          <p>Where you can define the initial fund and be active to start collecting</p>
+          <p> <span> To open the register, please click on the button below </span></p>
+
+          <button class="btn" (click)="isShow = !isShow" [disabled]="sharedService.getCasherPermissions == false">
+            {{sharedService.getCasherPermissions == false ?
+            'You are not allowed to open the register': 'Open Register'}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="isShow">
+      <div class="card-collect">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group mb-3">
+                <label>Initial Fund .</label>
+                <p class=""> Where you can define the initial fund and to be active to start collection </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group mb-3">
+                <input type="number" min="0" class="form-control" formControlName="InitialFund" name="InitialFund"
+                  required>
+                <!-- (keypress)="numberOnly($event)" -->
+
+                <div
+                  *ngIf="submitted && formValid['InitialFund'].invalid || formGroup.get('InitialFund').value <= 0 && formGroup.get('InitialFund').touched "
+                  class="ng-dirty">
+                  <span class="error">
+                    required, cannot be zero or negative
+                  </span>
+                  <!-- || formGroup.get('InitialFund').value <= 0 -->
+                  <!-- *ngIf="formValid['InitialFund'].errors['required'] || formValid['InitialFund'].errors" -->
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-8">
+              <div class="form-group mb-3">
+                <label> Notes </label>
+                <textarea rows="4" class="form-control" formControlName="Notes" name="Notes"></textarea>
+
+                <!-- <div
+                  *ngIf="submitted && formValid['Notes'].invalid ||  formValid['Notes'].invalid && (formValid['Notes'].dirty || formValid['Notes'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['Notes'].errors">
+                  </span>
+                  <span class="error" *ngIf="formValid['Notes'].errors['required']">
+                    required, cannot be zero or negative
+                  </span>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="btns-group my-1 mx-1">
+                <button type="submit" class="btn btn-save" *ngIf="!isLoading"> Save</button>
+                <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+                    class="fa-solid fa-circle-notch fa-spin"></i></button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!sharedService.getRegister">
+    <div class="col-md-12">
+      <div class="card-collect">
+        <div class="open-reg">
+          <div class="bgimg">
+            <img src="assets/images/locker.png" alt="">
+          </div>
+          <h3>You don't have register yet </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

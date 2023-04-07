@@ -1,0 +1,27 @@
+<div class="card-page">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tab-nav">
+        <button class="btn active" (click)="goToPage(1)" [class.active]="selected == 1"> Petty Cash Requests </button>
+        <button class="btn" (click)="goToPage(2)" [class.active]="selected == 2"> Petty Cash Setup</button>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="tabcontent">
+        <div class="tab-item" [hidden]="selected !=1">
+          <div>
+            <app-request></app-request>
+          </div>
+        </div>
+        <div class="tab-item" [hidden]="selected !=2">
+          <div>
+            <app-setup></app-setup>
+          </div>
+        </div>
+        <div class="tab-item"></div>
+      </div>
+    </div>
+
+  </div>
+</div>

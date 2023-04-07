@@ -1,0 +1,134 @@
+<div class="card-page">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-collect" *ngIf="details">
+        <h3> Register Details</h3>
+        <div class="row">
+          <div class="col-md-7">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4> Register No. </h4>
+                  <p> {{details.register.registerId}} </p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4> Register Name. </h4>
+                  <p> {{details.register.registersName}} </p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4> Branch </h4>
+                  <p> {{details.register?.branch?.branchName}} </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="card-sm">
+                  <h4> Current Petty Cash Amount </h4>
+                  <p> No data </p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card-sm">
+                  <h4> Monthly Consumption </h4>
+                  <p> No data </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 cc">
+      <app-last-expense [registerId]="registerId"></app-last-expense>
+    </div>
+    <div class="col-md-12">
+      <div class="card-collect" *ngIf="details">
+        <div class="colect-head">
+          <h3> Petty Cash request details </h3>
+          <div class="">
+            <span class="pending" [style.background-color]="details.statusObj.lookupBGColor"
+              [style.color]="details.statusObj.lookupTextColor"> {{details.statusObj.description}} </span>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="card-sm">
+                  <h4> Requested By </h4>
+                  <p> {{details.createdBy.fullName}}</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="card-sm">
+                  <h4> New Request Date </h4>
+                  <p> {{details.createdAt | date:' d/M/y '}}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <br>
+        <br>
+        <h3> Last Request </h3>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="card-sm">
+                  <h4> Request Date </h4>
+                  <p>{{details?.lastRequestobject?.createdAt | date:' d/M/y '}}</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="card-sm">
+                  <h4> Amount </h4>
+                  <p class="currency-format"> {{details?.lastRequestobject?.requestedAmount}} </p>
+                </div>
+              </div>
+              <div class="col-md-6"></div>
+              <div class="col-md-6">
+                <br>
+                <br>
+                <div class="form-group">
+                  <label> Note </label>
+                  <div class="note">
+                    <p> {{details?.requestNote}} </p>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="details.statusObj.description == 'Rejected'">
+                  <label> Reason </label>
+                  <div class="note">
+                    <p> {{details.rejectionReason}} </p>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="details.statusObj.description == 'Approved'">
+                  <label> Amount </label>
+                  <div class="note amount">
+                    <p class="currency-format"> {{details.approvedAmount}} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="details.statusObj.description == 'Pending'">
+            <div class="btns-group mb-0 mx-0">
+              <button type="button" class="btn btn-cancel" (click)="openModalReject(details)">Reject</button>
+              <button type="submit" class="btn btn-save" (click)="openModalApprove(details)"> Approve </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

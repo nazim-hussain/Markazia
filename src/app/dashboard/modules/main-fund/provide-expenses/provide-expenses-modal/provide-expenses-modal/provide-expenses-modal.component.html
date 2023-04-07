@@ -1,0 +1,41 @@
+<div class="modal-body" *ngIf="!message && !isLoading">
+  <div class="flex-between">
+    <p>Are you sure to provide</p>
+    <p>
+      <b> {{ registerDetails?.createdBy?.fullName }} </b>
+    </p>
+    <p>
+      with petty cash amount
+      <span class="amountDetail">
+        {{ registerDetails?.approvedAmount }} JD ?
+      </span>
+    </p>
+  </div>
+  <div class="btns-group mt-4 mb-4">
+    <button type="button" (click)="dismissModal()" class="btn btn-cancel">
+      Cancel
+    </button>
+    <button type="submit" (click)="provideExpenses()" class="btn btn-save">
+      Provide
+    </button>
+  </div>
+  <!-- message Error -->
+  <div
+    class="alert alert-danger text-center mt-3 mb-3 my-2"
+    role="alert"
+    *ngIf="messageError"
+  >
+    {{ messageError }}
+  </div>
+</div>
+
+<!-- loader -->
+
+<app-loading *ngIf="isLoading"></app-loading>
+<!-- success Message -->
+
+<div *ngIf="message" class="modal-body">
+  <div class="message">
+    <h5><i class="fa-regular fa-circle-check"></i> {{ message }}</h5>
+  </div>
+</div>

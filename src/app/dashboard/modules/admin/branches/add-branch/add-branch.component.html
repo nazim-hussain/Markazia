@@ -1,0 +1,400 @@
+<div class="row">
+  <div class="col-md-12">
+    <div>
+      <form [formGroup]="branchForm" (ngSubmit)="onSubmit()">
+        <div class="page-title">
+          <!-- {{pageType}} -->
+          <h3> Branch Information </h3>
+        </div>
+        <div class="card-form overflow-hidden position-relative">
+          <div class="overlay-bi" *ngIf="!isShowBranchInfo && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editBranchInfo()" [disabled]="branchForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowBranchInfo"></i> -->
+              <img src="assets/images/save.png" *ngIf="isShowBranchInfo" class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isShowBranchInfo" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Branch Name *</label>
+                <input formControlName="branchName" name="branchName" type="text" class="form-control"
+                  placeholder="Type name" required minlength="6" maxlength="30" OnlyCharacter autocomplete="off">
+                <!-- (keypress)="checkSpecialChar($event)" -->
+                <button class="btn btn-remove" *ngIf="branchForm.get('branchName').value"
+                  (click)="removeBranchName()"><i class="fa-solid fa-xmark"></i> </button>
+                <div
+                  *ngIf="submitted && formValid['branchName'].invalid ||  formValid['branchName'].invalid && (formValid['branchName'].dirty || formValid['branchName'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['branchName'].errors">
+                    <!-- <span class="error"> Branch name is required.</span> -->
+                    <!-- <span class="error"> This element is required, please fill.</span> -->
+                  </span>
+                  <span class="error" *ngIf="formValid['branchName'].errors['required']"> This element is required,
+                    please
+                    fill.</span>
+                  <span *ngIf="formValid['branchName'].errors['minlength']">
+                    <span class="error"> Branch name length must be between 6 and 30 character.</span>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4 ">
+              <div class="d-flex justify-content-end">
+                <div class="form-check form-switch">
+                  <label class="labelactive">Active </label>
+                  <input class="form-check-input" [(ngModel)]="isStatus" name="isStatus" type="checkbox" role="switch"
+                    (change)="chooseStatus()" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <!-- <div class="edit-btn" [hidden]="!branchId">
+                  <button class="btn" (click)="toEdit()"><i class="fa-solid fa-pen"></i> </button>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label> Branch Type </label>
+                <div>
+                  <div class="form-check form-check-inline" *ngFor="let item of branchTypes">
+                    <input class="form-check-input" type="checkbox" [id]="item.id" (change)="selectBranchType(item.id)"
+                      [checked]="branchTypesAry.includes(item.id)">
+                    <label class="form-check-label" [for]="item.id">{{item.name[0].lookupName}}</label>
+                  </div>
+                </div>
+                <div
+                  *ngIf="submitted && formValid['branchTypes'].invalid || formValid['branchTypes'].invalid && (formValid['branchTypes'].dirty || formValid['branchTypes'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['branchTypes'].errors" [hidden]="branchTypesAry?.length != 0">
+                    <span class="error">This element is required, please fill.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Email</label>
+                <input type="text" formControlName="email" name="email" class="form-control" placeholder="Email"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{1,3}$">
+                <button class="btn btn-remove" *ngIf="branchForm.get('email').value" (click)="removeemail()"><i
+                    class="fa-solid fa-xmark"></i> </button>
+                <div *ngIf="formValid['email'].dirty || formValid['email'].touched" class="ng-dirty">
+                  <span [hidden]="branchForm.get('email').value == ''">
+                    <!-- <span class="error" *ngIf="formValid['email'].errors['required']"> This element is required, please
+                      fill.</span> -->
+                    <span class="error" *ngIf="formValid['email'].errors"> the email you entered is incorrect.</span>
+
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+
+              <div class="form-group  position-relative" [class.overflow-hidden]="!isShowBranchInfo && isEdit">
+                <label>Phone Number</label>
+                <div>
+                  <input type="text" class="form-control" formControlName="phone" name="phone" placeholder=""
+                    ng2TelInput [ng2TelInputOptions]="{'preferredCountries': ['jo', 'sa']}" min="8" max="10"
+                    minlength="8" maxlength="10" (keypress)="numberOnly($event)" />
+                  <button class="btn btn-remove" *ngIf="branchForm.get('phone').value" (click)="removephone()"><i
+                      class="fa-solid fa-xmark"></i> </button>
+                  <div *ngIf="formValid['phone'].invalid && (formValid['phone'].dirty || formValid['phone'].touched)"
+                    class="ng-dirty" [hidden]="branchForm.get('phone').value == ''">
+                    <span class="error" *ngIf="formValid['phone'].errors['required']"> This element is required, please
+                      fill.</span>
+                    <span *ngIf="formValid['phone'].errors['minlength']">
+                      <!-- <span class="error">Please enter valid phone no.</span> -->
+                      <!-- <span class="error">the digits are must be from 8 to 10 </span> -->
+                      <span class="error">The digits are less than 10 for (Mobile) and the digits are more than 8
+                      </span>
+
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-12 d-flex">
+              <h3 class="heading1"> Branch Location </h3>
+              <p class="smallTextMuted mx-3"> Define Location by Search and select or set location on map</p>
+            </div>
+            <div class="col-md-6">
+              <!-- <div class="form-group mt-3">
+                <input type="text" class="form-control" placeholder="Search">
+              </div> -->
+            </div>
+            <div class="col-md-12">
+              <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="false"
+                (mapClick)="mapClicked($event)">
+
+                <agm-marker *ngFor="let m of markers; let i = index"
+                  (markerClick)="clickedMarker(m.label, i, infowindow)" [latitude]="m.lat" [longitude]="m.lng"
+                  [label]="m.label" [markerDraggable]="m.draggable" (dragEnd)="markerDragEnd(m, $event)">
+
+                  <agm-info-window #infowindow>
+                    <strong>InfoWindow content</strong>
+                  </agm-info-window>
+
+                </agm-marker>
+
+              </agm-map> -->
+            </div>
+            <div class="col-md-6">
+              <div class="form-group overflow-hidden position-relative">
+                <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()"
+                  placeholder="Search Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+                  #search [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}">
+                <button type="button" class="btn btn-remove" style="top: 4px;" (click)="removeseacrch()"
+                  [hidden]="searchText?.length == 0"><i class="fa-solid fa-xmark"></i>
+                </button>
+                <!-- [hidden]="stext.length == 0" -->
+                <div>
+                  <div
+                    *ngIf="submitted && formValid['country'].invalid || formValid['country'].invalid && (formValid['country'].dirty || formValid['country'].touched)"
+                    class="ng-dirty">
+                    <span *ngIf="formValid['country'].errors">
+                      <span class="error">This element is required, please</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-12">
+              <!-- <p> {{this.branchForm.get('longitude')?.value}}, {{this.branchForm.get('latitude')?.value}} </p>
+              <p> {{lng}} - {{lat}} </p> -->
+              <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="true" [zoomControl]="true"
+                [fullscreenControl]="true">
+                <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="true"
+                  (dragEnd)="markerDragEnd($event)">
+                  <!-- [label]="m.label" [markerDraggable]="m.draggable" (dragEnd)="markerDragEnd(m, $event)" -->
+                  <agm-info-window>
+                    <div> <strong> My Current Location </strong></div>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+
+              <br>
+            </div>
+
+            <div class="col-md-6" hidden>
+              <div class="form-group">
+                <label>longitude </label>
+                <input formControlName="longitude" name="longitude" type="text" class="form-control"
+                  placeholder="longitude" required>
+                <div
+                  *ngIf="formValid['longitude'].invalid && (formValid['longitude'].dirty || formValid['longitude'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['longitude'].errors">
+                    <span class="error"> longitude is required.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6" hidden>
+              <div class="form-group">
+                <label>latitude </label>
+                <input formControlName="latitude" name="latitude" type="text" class="form-control"
+                  placeholder="latitude" required>
+                <div
+                  *ngIf="formValid['latitude'].invalid && (formValid['latitude'].dirty || formValid['latitude'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['latitude'].errors">
+                    <span class="error"> latitude is required.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Country </label>
+                <input formControlName="country" name="country" type="text" class="form-control" placeholder=""
+                  required>
+                <!-- <div *ngIf="submitted && formValid['country'].errors" class="invalid-feedback">
+                  <div *ngIf="formValid['country'].errors['required']">country is required</div>
+                </div> -->
+                <!-- <div
+                  *ngIf="submitted && formValid['country'].invalid || formValid['country'].invalid && (formValid['country'].dirty || formValid['country'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['country'].errors">
+                    <span class="error"> Country is required.</span>
+                  </span>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label> City </label>
+                <input formControlName="city" name="city" type="text" class="form-control" placeholder="">
+                <!-- <div
+                  *ngIf="submitted && formValid['city'].invalid || formValid['city'].invalid && (formValid['city'].dirty || formValid['city'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['city'].errors">
+                    <span class="error"> City is required.</span>
+                  </span>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Area </label>
+                <input formControlName="branchArea" name="branchArea" type="text" class="form-control" placeholder="">
+                <!-- <div
+                  *ngIf="submitted && formValid['branchArea'].invalid || formValid['branchArea'].invalid && (formValid['branchArea'].dirty || formValid['branchArea'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['branchArea'].errors">
+                    <span class="error"> Area is required.</span>
+                  </span>
+                </div> -->
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="page-title">
+          <h3>Working Hours</h3>
+        </div>
+        <div class="card-form whour overflow-hidden position-relative">
+          <div class="overlay-wh" *ngIf="!isShowWorkingHours && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editWorkingHours()" [disabled]="branchForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowWorkingHours"></i> -->
+              <img src="assets/images/save.png" *ngIf="isShowWorkingHours" class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isShowWorkingHours" alt="">
+            </button>
+          </div>
+          <div class="">
+            <div class="form-check mb-2">
+              <!-- <label class="form-check-label" for="flexCheckDefault"> Apply All </label> -->
+              <!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="applyAllTime()"> -->
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="day-active mt-0 mb-2">
+                  <h6> Days </h6>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <h6 class="px-2 mb-2"> Hours</h6>
+              </div>
+              <div class="col-md-4">
+              </div>
+            </div>
+            <div formArrayName="branchWorkingHours" *ngFor="let item of branchWorkingHours.controls; let i=index">
+              <div class="row" [formGroupName]="i">
+                <div class="col-sm-4">
+                  <div class="form-group day-active">
+                    <!-- [value]="item.value.fromTime ? true : false" -->
+                    <!-- [checked]="item.value.fromTime" -->
+                    <div class="form-check form-switch justify-content-between">
+                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                        formControlName="isActive" [disabled]="isEdit == false"
+                        (change)="chooseTime(item.value.isActive,i)">
+                      <label for=""> {{item.value.dayName}} </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="">
+                    <div class="from-to-time">
+                      <p> From </p>
+                      <!-- [readonly]="isEdit == false"  -->
+                      <input type="time" formControlName="fromTime" name="fromTime" class="form-control" placeholder=""
+                        [disabled]="item.value.isActive == false ? true : false">
+                    </div>
+                    <!-- [disabled]="item.value.isActive == false ? true : false" -->
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="">
+                    <div class="from-to-time">
+                      <p> To </p>
+                      <!-- [readonly]="isEdit == false" -->
+                      <!-- item.value.isActive ? true : false  -->
+                      <input type="time" formControlName="toTime" name="toTime" class="form-control " placeholder="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="page-title">
+          <h3>Branch Admin</h3>
+        </div>
+        <div class="card-form position-relative">
+          <div class="overlay-ba" *ngIf="!isShowBranchAdmin && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editBranchAdmin()" [disabled]="branchForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowBranchAdmin"></i> -->
+              <img src="assets/images/save.png" *ngIf="isShowBranchAdmin" class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isShowBranchAdmin" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Branch Admin</label>
+                <ng-select name="adminUser" id="adminUser" placeholder="Type name" [items]="branchAdmin"
+                  bindLabel="fullName" bindValue="userId" formControlName="adminUser">
+                </ng-select>
+                <div
+                  *ngIf=" formValid['adminUser'].invalid  && (formValid['adminUser'].dirty || formValid['adminUser'].touched )   "
+                  class="ng-dirty">
+                  <span *ngIf="formValid['adminUser'].errors">
+                    <span class="error">This element is required, please fill</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- [hidden]="isEdit == false" -->
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <!-- <div class="alert alert-danger" role="alert" *ngIf="msgBranchNAme">
+              {{msgBranchNAme}}
+            </div> -->
+            <!-- <div class="alert alert-success" role="alert" *ngIf="messageSuccess">
+              {{messageSuccess}}
+            </div> -->
+            <div class="alert alert-danger" role="alert" *ngIf="errorsList">
+              <ul>
+                <li *ngFor="let item of errorsList">{{item.ErrorMessageEn}} </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="btns-group">
+            </div>
+            <div class="btns-group">
+              <button type="button" class="btn btn-cancel">Cancel</button>
+              <button type="button" class="btn btn-save" *ngIf="isEdit" (click)="chickForEdit()"> Save</button>
+              <button type="submit" class="btn btn-save" *ngIf="!isLoading && !isEdit"> Add</button>
+              <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+                  class="fa-solid fa-circle-notch fa-spin"></i></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- <div class="btns-group">
+  <button type="button" class="btn btn-cancel">Cancel</button>
+  <button type="submit" class="btn btn-save" *ngIf="!isLoading"> {{!isEdit ? 'Add' : 'Save'}} </button>
+  <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i class="fa-solid fa-circle-notch fa-spin"></i></button>
+</div> -->

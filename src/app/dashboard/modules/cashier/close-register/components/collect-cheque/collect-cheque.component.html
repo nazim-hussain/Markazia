@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="input-group search-box">
+      <button class="btn" type="button" id="button-addon1" (click)="removeSearch()"><i
+          class="fa-solid fa-search"></i></button>
+      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText"
+        (keyup)="searchData($event)">
+      <button class="btn" type="button" id="button-addon1" [hidden]="searchText.length == 0" (click)="removeSearch()"><i
+          class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- <div class="input-group  search-box">
+      <button class="btn" type="button" id="button-addon1"><i class="fa-solid fa-search"></i></button>
+      <input type="text" class="form-control" placeholder="Search by cheque detail...">
+      <button class="btn d-none" type="button" id="button-addon1"><i class="fa-solid fa-xmark"></i></button>
+    </div> -->
+  </div>
+  <div class="col-md-6">
+    <div class="top-details justify-content-end pt-3">
+      <p> <span> No. Of Cheque {{totalRecordsCount}}</span> </p>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card-table mt-3">
+      <div class="row">
+        <div class="col-md-12" *ngIf="collectedData; let collectedData; else: loading ">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr class="py-2">
+                  <th scope="col"> Customer </th>
+                  <th scope="col"> Cheque No. </th>
+                  <th scope="col"> Amount </th>
+                  <th scope="col"> Date </th>
+                  <th scope="col"> Bank </th>
+                  <th scope="col"> Action </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of collectedData">
+                  <td> {{ item.chequeCustomer ? item.chequeCustomer : item.chequeCustomer}}</td>
+                  <td> {{ item.lastChequeNo ? item.lastChequeNo : item.chequeNo}}</td>
+                  <td> {{item.lastAmountToPay ? item.lastAmountToPay : item.chequeCollectionJod }} JD </td>
+                  <td> {{ item.lastCheckDate ?
+                       (item.lastCheckDate | date:' d MMM y'):
+                       (item.chequeDate | date:' d MMM y')}}
+                  </td>
+                  <td> {{item.lastBank[0]?.lookupName ? item.lastBank[0]?.lookupName : item.bank[0]?.lookupName}} </td>
+                  <td>
+                    <!-- {{item.performedAction}} -->
+
+                    <button class="btn btn-undo" (click)="ReverseActionsOnCheques(item)"
+                      *ngIf="item.actionTaken == true">
+                      Undo <img src="assets/images/undo.png" alt=""></button>
+
+                    <button class="btn btn-right" (click)="ActionsOnCheques(item,'right')"
+                      *ngIf="item.actionTaken == false || item.performedAction == 'right' || item.performedAction == 'edit'"
+                      [disabled]="item.performedAction == 'right' ? true : false || item.performedAction == 'edit' ? true : false">
+                      <i class="fa-regular fa-circle-check"></i> </button>
+                    <button class="btn btn-xmark" (click)="ActionsOnCheques(item,'wrong')"
+                      *ngIf="item.actionTaken == false || item.performedAction == 'wrong'"
+                      [disabled]="item.performedAction == 'wrong' ? true : false">
+                      <i class="fa-regular fa-circle-xmark"></i> </button>
+                    <button class="btn btn-edit" *ngIf="item.actionTaken == false || item.performedAction == 'edit'"
+                      [disabled]="item.performedAction == 'edit' ? true : false" (click)="openModalEdit(item)"> <i
+                        class="fa-solid fa-pen"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="collectedData?.length == 0">
+            <app-not-found></app-not-found>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <ng-template #loading>
+            <div>
+              <app-loading></app-loading>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6" [hidden]="collectedData?.length > 7">
+    <h6 class="showing"> Showing <span> {{( pageNo + 1 ) * 6 - 5}} - {{ collectedData?.length == 6 ? (( pageNo + 1 ) * 6
+        ):
+        totalRecordsCount }} </span>
+      from <span> {{totalRecordsCount}} </span> data
+    </h6>
+  </div>
+  <div class="col-md-6" [hidden]="totalRecordsCount < 7">
+    <ul class="pagination">
+      <li class="page-item" *ngFor="let page of pages">
+        <button class="page-link" (click)="setPage(page)" [ngClass]="{ active: pageNo === page }"
+          [disabled]="pageNo === page">
+          {{ page + 1 }}
+        </button>
+      </li>
+    </ul>
+  </div>
+  <!-- <div class="col-sm-6">
+    <h6 class="showing"> Showing <span> 1- 6 </span> from <span> 13 </span> data
+    </h6>
+  </div>
+  <div class="col-sm-6">
+    <ul class="pagination">
+      <li class="page-item d-flex">
+        <button class="page-link active"> 1 </button>
+        <button class="page-link"> 2 </button>
+        <button class="page-link"> 3 </button>
+      </li>
+    </ul>
+  </div> -->
+
+</div>

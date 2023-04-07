@@ -1,0 +1,66 @@
+agm-map {
+  height: 400px;
+}
+.day-active {
+  max-width: 70%;
+  margin: 0px auto;
+  margin-top: 10px;
+  label {
+    font-size: 16px;
+  }
+}
+
+::-webkit-input-placeholder {
+  color: #dfdfdf;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+::-moz-input-placeholder {
+  color: #dfdfdf;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+:-moz-input-placeholder {
+  color: #dfdfdf;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+:-ms-input-placeholder {
+  padding: 10px;
+  color: #dfdfdf;
+  font-size: 16px;
+  font-weight: 600;
+}
+.overlay-bi,
+.overlay-wh,
+.overlay-ba {
+  position: absolute;
+  background-color: rgb(199 199 199 / 21%);
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 1;
+}
+.ovral {
+  overflow: initial !important;
+}
+.whour {
+  .form-check .form-check-input {
+    float: initial;
+    margin-left: 10px;
+  }
+}
+.btn-remove {
+  position: absolute;
+  right: 0px;
+  top: 37px;
+  color: #999;
+}
+
+
+

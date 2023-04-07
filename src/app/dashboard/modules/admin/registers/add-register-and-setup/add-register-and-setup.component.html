@@ -1,0 +1,577 @@
+<div class="row">
+  <div class="col-md-12">
+    <div>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="page-title">
+
+          <h3> Register Information </h3>
+        </div>
+        <div class="card-form position-relative" [class.overflow-hidden]="!isShowRegisterInfo  && isEdit">
+          <div class="overlay-bi" *ngIf="!isShowRegisterInfo && isEdit"></div>
+          <div class="row">
+            <div class="col-md-4">
+
+              <div class="form-group overflow-hidden position-relative">
+                <label>Register Name *</label>
+                <input formControlName="registersName" name="registersName" type="text" class="form-control"
+                  placeholder="Type name" required minlength="6" maxlength="30" OnlyCharacter autocomplete="off">
+                <button class="btn btn-remove" *ngIf="registerForm.get('registersName').value"
+                  (click)="removeregistersName()"><i class="fa-solid fa-xmark"></i> </button>
+                <div
+                  *ngIf="submitted && formValid['registersName'].invalid ||  formValid['registersName'].invalid && (formValid['registersName'].dirty || formValid['registersName'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['registersName'].errors">
+                  </span>
+                  <span class="error" *ngIf="formValid['registersName'].errors['required']"> This feild is
+                    required.</span>
+                  <span *ngIf="formValid['registersName'].errors['minlength']">
+                    <span class="error"> Register name length must be between 6 and 30 characters.</span>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-md-8">
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="form-check form-switch">
+                  <label class="labelactive">Active</label>
+                  <input class="form-check-input" [(ngModel)]="isStatus" name="isStatus" type="checkbox" role="switch"
+                    (change)="chooseStatus($event)" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="edit-btn float-end" *ngIf="isEdit">
+                  <button class="btn" type="button" (click)="editRegisterInfo()" [disabled]="registerForm.invalid">
+                    <!-- <i class="fa-solid fa-pen" *ngIf="isShowUserInfo"></i> -->
+                    <img src="assets/images/save.png" *ngIf="isShowRegisterInfo " class="save-img" alt="">
+                    <img src="assets/images/edit.png" *ngIf="!isShowRegisterInfo" alt="">
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="page-title">
+          <h3> Branch & Location* </h3>
+        </div>
+        <div class="card-form position-relative" [class.overflow-hidden]="!isBranchLocation  && isEdit">
+          <div class="overlay-bi" *ngIf="!isBranchLocation && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editBranchLocation()" [disabled]="registerForm.invalid">
+              <!-- -->
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowUserInfo"></i> -->
+              <img src="assets/images/save.png" *ngIf="isBranchLocation " class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isBranchLocation" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+
+              <div class="form-group">
+                <label>Location "City" </label>
+                <ng-select name="city" (change)="changeCity($event)" [searchable]="true" [minTermLength]="3" id="city"
+                  placeholder="Type City" [items]="cities" bindLabel="city" formControlName="city" required>
+                </ng-select>
+
+                <div
+                  *ngIf="submitted && formValid['city'].invalid || formValid['city'].invalid  && (formValid['city'].dirty || formValid['city'].touched )   "
+                  class="ng-dirty">
+                  <span *ngIf="formValid['city'].errors">
+                    <!-- <span class="error">Please enter branch admin.</span> -->
+                    <span class="error">This feild is required.</span>
+
+                  </span>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-4">
+
+              <div class="form-group">
+                <label>Branch </label>
+                <ng-select name="branch" (change)="changeBranch($event)" [searchable]="true" [minTermLength]="3"
+                  id="branch" placeholder="Type Branch" [items]="branches" bindValue="branchId" bindLabel="branchName"
+                  required formControlName="branchId" (clear)="clearBranch()">
+                </ng-select>
+                <!-- <div *ngIf=" submitted &&  registerForm.get('branchId').value == 0">
+                  <span class="error">This element is required, please fill</span>
+                </div> -->
+                <div
+                  *ngIf="submitted && formValid['branchId'].invalid || formValid['branchId'].invalid  && (formValid['branchId'].dirty || formValid['branchId'].touched )   "
+                  class="ng-dirty">
+                  <span *ngIf="formValid['branchId'].errors">
+                    <span class="error">This feild is required.</span>
+
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="form-group ">
+                <label> IP addresses</label>
+                <input formControlName="ipAddresses" name="ipAddresses" type="text" required class="form-control"
+                  placeholder="IP addresses" required>
+                <div
+                  *ngIf="submitted && formValid['ipAddresses'].invalid || formValid['ipAddresses'].invalid  && (formValid['ipAddresses'].dirty || formValid['ipAddresses'].touched )"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['ipAddresses'].errors">
+                    <span class="error">This feild is required.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="page-title">
+          <h3> Collection Orders* </h3>
+        </div>
+        <div class="card-form position-relative" [class.overflow-hidden]="!isCollectionOrders  && isEdit">
+          <div class="overlay-bi" *ngIf="!isCollectionOrders && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editCollectionOrders()" [disabled]="registerForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowUserInfo"></i> -->
+              <img src="assets/images/save.png" *ngIf="isCollectionOrders " class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isCollectionOrders" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div>
+                <div class="form-check form-check-inline" *ngFor="let item of collectionOrders">
+                  <input class="form-check-input" type="checkbox" [id]="item.id"
+                    (change)="selectOrderCollection(item.id)" [checked]="collectionOrdersAry.includes(item.id)">
+                  <label class="form-check-label" [for]="item.id">{{item.name[0].lookupName}}</label>
+                </div>
+              </div>
+              <div *ngIf="submitted && collectionOrdersAry?.length == 0" class="ng-dirty">
+                <span>
+                  <span class="error">Please select at least one order.</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <hr>
+              <div class="mb-3">
+                <h5> Collect for * </h5>
+              </div>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" formControlName="collectForAllBranches" id="collectForAllBranches"
+                    type="checkbox" (click)="chooseAllBranch()">
+                  <label for="collectForAllBranches" class="form-check-label"> All Branches </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" formControlName="collectForOwnBranch" id="collectForOwnBranch"
+                    type="checkbox" (click)="chooseOwnBranch()">
+                  <label for="collectForOwnBranch" class="form-check-label"> Own Branch</label>
+                </div>
+              </div>
+
+              <div
+                *ngIf="submitted &&  (f['collectForAllBranches'].value==false &&  f['collectForOwnBranch'].value==false ) "
+                class="ng-dirty">
+                <span class="error">
+                  Please select one </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="page-title">
+          <h3> Employees *</h3>
+        </div>
+        <div class="card-form position-relative" [class.overflow-hidden]="!isEmployees  && isEdit">
+          <div class="overlay-bi" *ngIf="!isEmployees && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editEmployees()" [disabled]="registerForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowUserInfo"></i> -->
+              <img src="assets/images/save.png" *ngIf="isEmployees " class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isEmployees" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label class="form-check-label fw-bold">Role Name</label>
+            </div>
+            <div class="col-md-4">
+              <label class="form-check-label fw-bold">User</label>
+            </div>
+          </div>
+          <hr class="m-0 mb-2">
+
+          <div formArrayName="registerEmployees">
+            <div *ngFor="let employee of employees().controls;let employeeIndex=index">
+
+              <div class="row" [formGroupName]="employeeIndex">
+                <div class="col-md-2">
+                  <div *ngIf="employeeIndex==0">
+                    <label class="form-check-label mt-2">Register Cashier</label>
+                  </div>
+                  <div *ngIf="employeeIndex!=0">
+                    <ng-select name="role" formControlName="roleId" placeholder="Select Role" [items]="userRoles"
+                      bindLabel="name" bindValue="roleId" required (change)="getUsersByRole($event,employeeIndex)">
+                    </ng-select>
+                    <div class="ng-dirty" *ngIf=" submitted && employee?.value?.roleId==null ">
+                      <span class="error">
+                        Please select this role.
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <ng-select name="adminUser" formControlName="userId" id="userId" placeholder="Type name"
+                      [items]="users" bindLabel="fullName" bindValue="userId" required>
+                    </ng-select>
+
+                    <div class="ng-dirty" *ngIf=" submitted &&  employee?.value?.userId==null ">
+                      <span class="error">
+                        Please select this user.
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="btns-group justify-content-start m-0 mt-1">
+                    <button *ngIf="employeeIndex!=0" (click)="deleteEmployee(employeeIndex)" class="btn btn-add p-2"
+                      style="width: 40px;"> <i class="fa fa-times"></i></button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- <div class="row">
+            <div class="col-md-2">
+              <label class="form-check-label">Register Cashier</label>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+
+                <ng-select name="adminUser" id="adminUser" placeholder="Type name" [items]="branches"
+                  bindLabel="fullName" required>
+                </ng-select>
+              </div>
+            </div>
+          </div> -->
+          <div class="row d-flex justify-content-end">
+            <div class="btns-group">
+              <input (click)="addNewEmployee()" type="button" class="btn btn-add" value="Add Employee">
+              <!-- <button (click)="addNewEmployee()" class="btn btn-add"> Add Employee</button> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="page-title">
+          <h3> Setup </h3>
+        </div>
+        <div class="card-form position-relative" [class.overflow-hidden]="!isSetup  && isEdit">
+          <div class="overlay-bi" *ngIf="!isSetup && isEdit"></div>
+          <div class="edit-btn float-end" *ngIf="isEdit">
+            <button class="btn" type="button" (click)="editSetup()" [disabled]="registerForm.invalid">
+              <!-- <i class="fa-solid fa-pen" *ngIf="isShowUserInfo"></i> -->
+              <img src="assets/images/save.png" *ngIf="isSetup " class="save-img" alt="">
+              <img src="assets/images/edit.png" *ngIf="!isSetup" alt="">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-check ">
+                <input class="form-check-input" formControlName="cash" (change)="cashChange($event)" id="cash"
+                  type="checkbox">
+                <label for="cash" class="form-check-label">Cash</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <ng-select name="Currency" class="multi" [multiple]="true" [searchable]="true" [minTermLength]="3"
+                  id="Currency" placeholder="Select Currency" [items]="currencies" bindLabel="name"
+                  bindValue="currencyId" formControlName="registerCurrencies">
+                  <!-- required currencyId-->
+                </ng-select>
+                <div *ngIf=" submitted &&  registerForm.get('registerCurrencies').value == 0">
+                  <span class="error">This feild is required.</span>
+                </div>
+                <div
+                  *ngIf="submitted && formValid['registerCurrencies'].invalid || formValid['registerCurrencies'].invalid  && (formValid['registerCurrencies'].dirty || formValid['registerCurrencies'].touched )   "
+                  class="ng-dirty">
+                  <span *ngIf="formValid['registerCurrencies'].errors">
+                    <!-- <span class="error">Please enter branch admin.</span> -->
+                    <span class="error">This feild is required.</span>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+            <!-- <div class="col-md-2">
+              <div class="btns-group m-0">
+                <button type="submit" class="btn btn-save">Add</button>
+              </div>
+            </div> -->
+
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2">
+              <div class="form-check form-check-inline">
+                <input (change)="onAccChange($event)" formControlName="onAccount" class="form-check-input" id="onA"
+                  type="checkbox">
+                <label class="form-check-label" for="onA">On Account</label>
+              </div>
+            </div>
+            <div class="col-md-10">
+              <div class="form-check form-check-inline">
+                <input formControlName="cheque" class="form-check-input" id="cheque" type="checkbox">
+                <label class="form-check-label" for="cheque">Cheque</label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input formControlName="onCustomerAccount" id="spare" class="form-check-input" type="checkbox">
+                <label class="form-check-label" for="spare">On Custumer Account</label>
+              </div>
+              <!-- <div class="form-check form-check-inline">
+                <input class="form-check-input" formControlName="otherRev" id="otherR" type="checkbox">
+                <label class="form-check-label" for="otherR">Other Revenues</label>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="row my-2 mb-4">
+            <div class="col-md-2">
+              <div class="form-check form-check-inline">
+                <input (change)="cardChange($event)" formControlName="cards" class="form-check-input" id="cards"
+                  type="checkbox">
+                <label class="form-check-label" for="cards">Cards</label>
+              </div>
+            </div>
+            <div class="col-md-10">
+              <div class="form-check form-check-inline">
+                <input formControlName="visa" class="form-check-input" id="visa" type="checkbox">
+                <label class="form-check-label" for="visa">Visa Card</label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input formControlName="mastercard" class="form-check-input" id="masterC" type="checkbox">
+                <label class="form-check-label" for="masterC">Master Card</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input formControlName="americanExpress" id="American" class="form-check-input" type="checkbox">
+                <label class="form-check-label" for="American">American Express</label>
+              </div>
+            </div>
+            <div
+              *ngIf="submitted && f['cash'].value==false &&  f['cards'].value==false &&  f['onAccount'].value==false "
+              class="ng-dirty">
+              <span class="error">
+                Please select at least one mathod from above</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="fw-bold" for="">Register Session </label>
+          </div>
+          <hr class="m-0 mb-3">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Number of Session Per Day</label>
+                <input name="branchName" type="number" formControlName="numberOfSessionsPerDay" class="form-control"
+                  placeholder="Number of Sessions" minlength="6" maxlength="30" autocomplete="off"
+                  (keypress)="numberOnly($event)">
+                <div
+                  *ngIf="(f['numberOfSessionsPerDay'].value*7)+1 <=(f['numberOfSessionsPerWeek'].value) && f['numberOfSessionsPerWeek'].value !=0 && f['numberOfSessionsPerWeek'].value !='' && f['numberOfSessionsPerDay'].value !=0 && f['numberOfSessionsPerDay'].value !=''"
+                  class="ng-dirty">
+                  <span class="error">
+                    seesion/week must less than session/Day of complete week </span>
+                </div>
+                <div
+                  *ngIf="submitted && formValid['numberOfSessionsPerDay'].invalid ||  formValid['numberOfSessionsPerDay'].invalid && (formValid['numberOfSessionsPerDay'].dirty || formValid['numberOfSessionsPerDay'].touched)"
+                  class="ng-dirty">
+
+                  <span class="error" *ngIf="formValid['numberOfSessionsPerDay'].errors['required']"> This feild is
+                    required.</span>
+
+                </div>
+
+                <!-- <button class="btn btn-remove"><i class="fa-solid fa-xmark"></i> </button> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Number of Session Per Week</label>
+                <input name="branchName" type="number" formControlName="numberOfSessionsPerWeek" class="form-control"
+                  placeholder="Number of Sessions" minlength="6" maxlength="30" autocomplete="off"
+                  (keypress)="numberOnly($event)">
+                <!-- required -->
+                <div *ngIf="(f['numberOfSessionsPerDay'].value*7)+1 <=(f['numberOfSessionsPerWeek'].value) &&
+                        f['numberOfSessionsPerWeek'].value !=0 && f['numberOfSessionsPerWeek'].value !='' &&
+                        f['numberOfSessionsPerDay'].value !=0 && f['numberOfSessionsPerDay'].value !='' ||
+                        f['numberOfSessionsPerDay'].value > f['numberOfSessionsPerWeek'].value" class="ng-dirty">
+                  <span class="error">
+                    seesion/week must less than session/Day of complete week </span>
+                </div>
+
+                <div
+                  *ngIf="submitted && formValid['numberOfSessionsPerWeek'].invalid ||  formValid['numberOfSessionsPerWeek'].invalid && (formValid['numberOfSessionsPerWeek'].dirty || formValid['numberOfSessionsPerWeek'].touched)"
+                  class="ng-dirty">
+                  <span class="error" *ngIf="formValid['numberOfSessionsPerWeek'].errors['required']">
+                    This element is required, please fill.
+                  </span>
+                </div>
+
+
+                <!-- <button class="btn btn-remove"><i class="fa-solid fa-xmark"></i> </button> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="fw-bold" for="">Allowed Session Time</label>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>From</label>
+                <input name="branchName" formControlName="allowedSessionTimeFrom" type="time" class="form-control">
+
+                <div
+                  *ngIf=" f['allowedSessionTimeFrom'].value >= f['allowedSessionTimeTo'].value && f['allowedSessionTimeFrom'].value !='' && f['allowedSessionTimeTo'].value !=''"
+                  class="ng-dirty">
+                  <span class="error">
+                    From time shoud less than To time. </span>
+                </div>
+                <!-- <button class="btn btn-remove"><i class="fa-solid fa-xmark"></i> </button> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>To</label>
+                <input name="branchName" formControlName="allowedSessionTimeTo" type="time" class="form-control">
+
+                <div
+                  *ngIf=" f['allowedSessionTimeFrom'].value >= f['allowedSessionTimeTo'].value && f['allowedSessionTimeFrom'].value !='' && f['allowedSessionTimeTo'].value !=''"
+                  class="ng-dirty">
+                  <span class="error">
+                    To time should greater than From time. </span>
+                </div>
+                <!-- <button class="btn btn-remove"><i class="fa-solid fa-xmark"></i> </button> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="fw-bold" for="">Opening without settlement</label>
+
+          </div>
+          <hr class="m-0 mb-3">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" (change)="changeSettlement($event)" id="settlement"
+                  formControlName="allowOpenWithoutSettlement" type="checkbox">
+                <label class="form-check-label" for="settlement">Allow open a new session without settlement.</label>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <label class="fw-bold" for="">No of Opening without settlement</label>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Per Day</label>
+                <input name="branchName" type="text" formControlName="numberOfOpeningWithoutSettlementPerDay"
+                  class="form-control" minlength="6" maxlength="30" autocomplete="off" (keypress)="numberOnly($event)">
+                <!-- required -->
+                <div
+                  *ngIf="(f['numberOfOpeningWithoutSettlementPerDay'].value*7)+1 <=(f['numberOfOpeningWithoutSettlementPerWeek'].value) && f['numberOfOpeningWithoutSettlementPerWeek'].value !=0 && f['numberOfOpeningWithoutSettlementPerWeek'].value !='' && f['numberOfOpeningWithoutSettlementPerDay'].value !=0 && f['numberOfOpeningWithoutSettlementPerDay'].value !=''"
+                  class="ng-dirty">
+                  <span class="error">
+                    No of Opening/Day must less than No of Opening/week of complete week </span>
+                </div>
+
+
+                <div
+                  *ngIf="submitted && formValid['numberOfOpeningWithoutSettlementPerDay'].invalid ||  formValid['numberOfOpeningWithoutSettlementPerDay'].invalid && (formValid['numberOfOpeningWithoutSettlementPerDay'].dirty || formValid['numberOfOpeningWithoutSettlementPerDay'].touched)"
+                  class="ng-dirty">
+
+                  <span class="error" *ngIf="formValid['numberOfOpeningWithoutSettlementPerDay'].errors['required']">
+                    This feild is required.</span>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group overflow-hidden position-relative">
+                <label>Per Week</label>
+                <input name="branchName" type="text" formControlName="numberOfOpeningWithoutSettlementPerWeek"
+                  class="form-control" minlength="6" maxlength="30" autocomplete="off" (keypress)="numberOnly($event)">
+                <!-- required -->
+                <div
+                  *ngIf="(f['numberOfOpeningWithoutSettlementPerDay'].value*7)+1 <=(f['numberOfOpeningWithoutSettlementPerWeek'].value) && f['numberOfOpeningWithoutSettlementPerWeek'].value !=0 && f['numberOfOpeningWithoutSettlementPerWeek'].value !='' && f['numberOfOpeningWithoutSettlementPerDay'].value !=0 && f['numberOfOpeningWithoutSettlementPerDay'].value !=''"
+                  class="ng-dirty">
+                  <span class="error">
+                    No of Opening/Day must less than No of Opening/week of complete week </span>
+                </div>
+
+                <div
+                  *ngIf="submitted && formValid['numberOfOpeningWithoutSettlementPerWeek'].invalid ||  formValid['numberOfOpeningWithoutSettlementPerWeek'].invalid && (formValid['numberOfOpeningWithoutSettlementPerWeek'].dirty || formValid['numberOfOpeningWithoutSettlementPerWeek'].touched)"
+                  class="ng-dirty">
+
+                  <span class="error" *ngIf="formValid['numberOfOpeningWithoutSettlementPerWeek'].errors['required']">
+                    This feild is required.</span>
+
+                </div>
+
+
+                <!-- <button class="btn btn-remove"><i class="fa-solid fa-xmark"></i> </button> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="fw-bold" for="">Cash Deposit*</label>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-check form-check-inline" *ngFor="let item of deposites">
+                <input class="form-check-input" formControlName="cashDepositTypeId" [value]="item.id" [id]="item.id"
+                  type="radio" required>
+                <label class="form-check-label" [for]="item.id">{{item.name}}</label>
+              </div>
+              <div *ngIf="submitted && f['cashDepositTypeId'].value==null" class="ng-dirty">
+                <span class="error"> This feild is required.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-danger" role="alert" *ngIf="errorsList">
+              <ul>
+                <li *ngFor="let item of errorsList">{{item.errorMessageEn || item.ErrorMessageEn}} </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="btns-group">
+              <button type="button" class="btn btn-cancel">Cancel</button>
+              <button type="submit" class="btn btn-save" *ngIf="!isLoading"> {{!isEdit ? 'Add' : 'Save'}} </button>
+              <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+                  class="fa-solid fa-circle-notch fa-spin"></i></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,156 @@
+<div class="modal-body" *ngIf="!message">
+  <div class="row">
+    <div class="col-md-12" *ngIf="expenseDetails">
+      <div class="modal-head">
+        <div>
+          <h3> Expense Details </h3>
+        </div>
+        <div class="info">
+          <p class="invoic"> <b> Invoice No </b> {{expenseDetails?.invoiceNo }} </p>
+          <p> <b> Date </b> {{expenseDetails?.createdAt | date:'d/M/yyyy'}} </p>
+        </div>
+      </div>
+      <div class="card-form position-relative">
+        <div class="row mt-3">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card-sm">
+                <h4> Employe Name </h4>
+                <p> {{expenseDetails?.createdBy.fullName}} </p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card-sm">
+                <h4> Category</h4>
+                <p> {{expenseDetails?.category[0].lookupName}} </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+
+                <div class="col-md-4">
+                  <div class="card-sm">
+                    <h4> Amount </h4>
+                    <p class="currency-format"> {{expenseDetails?.expenseAmount}} </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card-sm">
+                    <h4> Tax </h4>
+                    <p> {{expenseDetails?.expenseTax}} </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card-sm">
+                    <h4> Total Amount </h4>
+                    <p class="currency-format"> {{expenseDetails?.expenseTotalAmount}} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" *ngIf="expenseDetails?.statusObj?.description != 'Pending'">
+              <div class="card-sm">
+                <h4 class="mb-3"> Status </h4>
+                <span class="pending mt-2" [style.background-color]="expenseDetails?.statusObj?.lookupBGColor"
+                  [style.color]="expenseDetails?.statusObj?.lookupTextColor">
+                  {{expenseDetails?.statusObj?.description}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-8"></div>
+
+            <div class="col-md-8">
+              <div class="form-group mb-3">
+                <label> Attachment</label>
+                <br>
+              </div>
+
+              <div class="uploadedfile">
+                <p (click)="openMdalImageView()"> Receipts - {{expenseDetails?.expenseRecordId}} </p>
+                <div class="d-flex">
+                  <button class="btn fview" type="button" (click)="openMdalImageView()">
+                    <img src="assets/images/eye.png" alt=""> </button>
+                  <a class="btn fview" type="button" [href]="expenseDetails?.files[0]?.attachmentPath" download>
+                    <img src="assets/images/Download.png" alt=""> </a>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-12 my-2">
+              <div class="card-sm  ">
+                <h4> Note </h4>
+                <div class="note">
+                  <p> {{expenseDetails?.expenseNotes}} </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 my-2" *ngIf="expenseDetails?.statusObj.description == 'Rejected'">
+              <div class="card-sm  ">
+                <h4>Reason </h4>
+                <div class="note">
+                  <p> {{expenseDetails?.rejectionReason}} </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 my-2" *ngIf="expenseDetails?.statusObj?.description == 'Pending'">
+              <div class="tackaction">
+                <h6> Please take an action for the invoice </h6>
+                <br>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Approved"
+                      value="Approved" (change)="chooseType($event)" [(ngModel)]="type">
+                    <label class="form-check-label" for="Approved">Approve</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Reject" value="Reject"
+                      (change)="chooseType($event)" [(ngModel)]="type">
+                    <label class="form-check-label" for="Reject">Reject</label>
+                  </div>
+
+                </div>
+                <div class="row" *ngIf="type == 'Reject'">
+                  <div class="col-md-6 my-2">
+                    <label for=""> Please Fill the rejection reason </label>
+                    <textarea class="form-control" [(ngModel)]="RejectionReason" maxlength="150"></textarea>
+                  </div>
+
+                </div>
+                <div *ngIf="msgError">
+                  <span class="error py-2"> {{msgError}}</span>
+                </div>
+                <div class="alert alert-danger text-center my-2" role="alert" *ngIf="messageError">
+                  {{messageError}}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 padding-right">
+
+            <div class="btns-group my-2 mx-0">
+              <button type="button" class="btn btn-save" (click)="activeModal.close('Close click')"
+                *ngIf="expenseDetails?.statusObj?.description != 'Pending'">Close</button>
+              <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')"
+                *ngIf="expenseDetails?.statusObj?.description == 'Pending'">Cancel</button>
+              <button type="submit" class="btn btn-save" (click)="submitExpenseAction()"
+                *ngIf="expenseDetails?.statusObj?.description == 'Pending'">
+                Submit </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div *ngIf="message" class="modal-body">
+    <div class="message">
+      <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+    </div>
+  </div>

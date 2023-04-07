@@ -1,0 +1,40 @@
+.card-table thead th {
+  padding: 15px;
+}
+
+.btn-right {
+  color: #29a073;
+  font-size: 20px;
+  padding: 0px 5px;
+  margin: 0px 5px;
+  border: 0px;
+}
+.btn-xmark {
+  color: #dc3545;
+  font-size: 20px;
+  padding: 0px 5px;
+  margin: 0px 5px;
+  border: 0px;
+}
+.btn-edit {
+  color: #4e9aff;
+  font-size: 18px;
+  padding: 0px 5px;
+  margin: 0px 5px;
+  border: 0px;
+}
+.btn-undo {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0px;
+  border: 0px;
+   img {
+    width: 25px;
+  }
+}
+.card-table td {
+  padding: 10px 5px 10px 15px !important;
+}
+.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+  color: #a9a9a9 !important;
+}

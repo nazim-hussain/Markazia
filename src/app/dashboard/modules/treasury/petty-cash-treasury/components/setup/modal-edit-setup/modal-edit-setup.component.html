@@ -1,0 +1,53 @@
+<div class="modal-body" *ngIf="!message">
+  <div class="modal-head">
+    <h3> Petty Cash Limit </h3>
+  </div>
+  <div class="row" *ngIf="registerDetails">
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Register Name </h4>
+        <p> {{registerDetails?.registersName}} </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Register No. </h4>
+        <p> {{registerDetails?.id}} </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Branch </h4>
+        <p> {{registerDetails?.branch.branchName}} </p>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="form-group ">
+        <label>Limit Amount </label>
+        <input name="pettyCashLimit" type="number" class="form-control" placeholder="" appCheckAmount [(ngModel)]="pettyCashLimit">
+        <div *ngIf="msgError">
+          <span class="error py-2"> {{msgError}}</span>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div class="alert alert-danger text-center my-2" role="alert" *ngIf="messageError">
+      {{messageError}}
+    </div>
+    <br>
+    <div class="btns-group mb-0 mx-0 mt-3">
+      <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+      <button type="submit" class="btn btn-save" (click)="EditPettyCashLimit()"> Save
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<div *ngIf="message" class="modal-body">
+  <div class="message">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>

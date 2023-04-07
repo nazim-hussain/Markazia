@@ -1,0 +1,216 @@
+<div class="card-page">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="top-details">
+        <p> Date <span> {{currentDate | date:' d MMM y ' }} </span> &nbsp; Time <span> {{currentDate | date:'
+            hh:mm:ss a ' }} </span> </p>
+        <!-- <p *ngIf="isShow">
+          Register <span> {{registerName}} </span> Branch <span> {{branchName}} </span>
+        </p> -->
+      </div>
+      <!-- <div class="top-details" *ngIf="isShow">
+        <p> Date <span> 14 Apr 2022 </span> &nbsp; Time <span> 09:05PM </span> </p>
+      </div> -->
+    </div>
+
+    <div *ngIf="!isNoOPenSession">
+      <div class="col-md-12" *ngIf="isShow">
+        <div class="card-collect">
+          <div class="open-reg">
+            <div class="bgimg">
+              <img src="assets/images/close.png" alt="">
+            </div>
+            <h3>Welcome To Register {{registerName}} {{registerId}} in Branch {{branchName}} - {{cityName}}</h3>
+
+            <p> Where you can define the collected amounts and be available to settle the register </p>
+            <p> <small> To close the register, please click on the button below </small> </p>
+            <button class="btn" (click)="GetRegisterClosingData();isShow  = !isShow"> Close Register </button>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="!isShow && !isClose">
+        <div class="row" *ngIf="registerData; let registerData; else loading">
+          <div class="col-md-12">
+            <div class="tab-nav">
+              <button class="btn" (click)="chooseTab(1)" [class.active]="selected == 1">
+                <div class="d-flex gap-3 align-items-center">
+                  <div class="imag"><img src="assets/images/wallet.png" alt=""></div>
+                  <div class="info">
+                    <p> Total Cash </p>
+                    <h5> {{registerData.totalCollectedCashJod}} JD </h5>
+                  </div>
+                </div>
+              </button>
+              <button class="btn" (click)="chooseTab(2)" [class.active]="selected == 2" [disabled]="formGroup.invalid">
+                <div class="d-flex gap-3 align-items-center">
+                  <div class="imag"><img src="assets/images/cheque.png" alt=""></div>
+                  <div class="info">
+                    <p> Total Cheque </p>
+                    <h5>{{registerData.totalCollectedCheques}} JD </h5>
+                  </div>
+                </div>
+              </button>
+              <button class="btn" (click)="chooseTab(3)" [class.active]="selected == 3" [disabled]="formGroup.invalid">
+                <div class="d-flex gap-3 align-items-center">
+                  <div class="imag"><img src="assets/images/card.png" alt=""></div>
+                  <div class="info">
+                    <p> Total Card </p>
+                    <h5> {{registerData.totalCollectedCards}} JD </h5>
+                  </div>
+                </div>
+              </button>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="tab-content">
+                  <div class="tab-item" [hidden]="selected != 1">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card-collect py-2">
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <div class="total-card">
+                                <p> Petty Cash Remaining </p>
+                                <div class="total"> {{registerData.prettyCashRemainging}} JD </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-4">
+                              <div class="total-card">
+                                <p>Initial Fund</p>
+                                <div class="total"> {{registerData.initialFund}} JD </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <form [formGroup]="formGroup">
+
+                          <div class="card-collect">
+                            <div class="top-details">
+                              <h3> Cash</h3>
+                              <p> <span> No. Of Currencies {{registerData.noOfCurrencies}} </span> </p>
+                            </div>
+                            <div>
+                              <div formArrayName="registerSessionClosingAmounts"
+                                *ngFor="let item of registerSessionClosingAmounts.controls; let i=index">
+
+                                <div class="row mb-3" [formGroupName]="i">
+                                  <div class="col-sm-12">
+                                    <div class="curncy">
+                                      <!-- <h3> {{i + 1}} . {{item.currencyName[0].lookupName}} Currency </h3> -->
+                                      <h3> {{i + 1}} . {{item.value.currencyName}} Currency </h3>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <div class="total-card">
+                                      <p>Registered Amount </p>
+                                      <div class="total"> {{item.value.registeredAmount}} </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <div class="total-card justify-content-center ">
+                                      <p>Actual Amount </p>
+                                      <div class="actual-amount">
+                                        <input type="number" class="form-control" formControlName="actualAmount"
+                                        appCheckAmount (change)="calcDifference($event,i)" required>
+                                        <div class="error"
+                                          *ngIf="
+                                        submitted && registerSessionClosingAmounts.controls[i].get('actualAmount').invalid ||  registerSessionClosingAmounts.controls[i].get('actualAmount').invalid && registerSessionClosingAmounts.controls[i].get('actualAmount').touched  ">
+                                          <span>This filed is required,</span>
+                                        </div>
+                                        <!-- <div class="error"
+                                          *ngIf="registerSessionClosingAmounts.controls[i].get('actualAmount').value == 0 ">
+                                          <span> can not be 0 </span>
+                                        </div> -->
+                                      </div>
+                                      <!-- <div class="total"> 2500 </div> -->
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <div class="total-card justify-content-end ">
+                                      <p>Differences</p>
+                                      <div class="total"> {{item.value.differenceAmount}} </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="pt-1 pb-3">
+                                <hr>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-item" [hidden]="selected != 2">
+                    <div>
+                      <app-collect-cheque (loadMainData)="loadPageData($event)"></app-collect-cheque>
+                    </div>
+                  </div>
+                  <div class="tab-item" [hidden]="selected != 3">
+                    <div>
+                      <app-collect-card (loadMainData)="loadPageData($event)"></app-collect-card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-3">
+                <div class="card-collect ">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="form-group mb-3">
+                        <label> Notes </label>
+                        <textarea rows="4" class="form-control" [(ngModel)]="closingNotes" minlength="200"
+                          maxlength="200"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="btns-group my-1 mx-1">
+                  <button type="submit" class="btn btn-save" (click)="nextStep()"> Next</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <ng-template #loading>
+              <div>
+                <app-loading></app-loading>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="col-md-12" *ngIf="isClose">
+        <div class="card-collect">
+          <div class="open-reg">
+            <div class="bgimg">
+              <img src="assets/images/close.png" alt="">
+            </div>
+            <h4> Cash {{this.registerData.totalCollectedCashJod }} JD </h4>
+            <h4> Card {{this.registerData.totalCollectedCards }} JD </h4>
+            <h4> Cheque {{this.registerData.totalCollectedCheques }} JD </h4>
+            <p>To close the register, please click on the button below</p>
+            <!-- <button class="btn" type="button" (click)="isClose = !isClose"> Back </button> -->
+            <button class="btn" type="button" (click)="CloseRegisterSession()"> Close Register </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isNoOPenSession">
+      <div class="nosession">
+        <h5> {{isNoOPenSessionMessage}}</h5>
+      </div>
+    </div>
+  </div>
+</div>

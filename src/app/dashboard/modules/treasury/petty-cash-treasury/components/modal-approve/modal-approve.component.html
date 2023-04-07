@@ -1,0 +1,75 @@
+<div class="modal-body" *ngIf="!message">
+  <div class="modal-head">
+    <h3 *ngIf="type == 'approve'"> Approve Request </h3>
+    <h3 *ngIf="type == 'reject'"> Reject Request </h3>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-sm" *ngIf="type == 'approve'">
+        <p> You are about to approve the request of the petty cash for </p>
+      </div>
+      <div class="card-sm" *ngIf="type == 'reject'">
+        <p> You are about to reject the request of the petty cash for</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Register Name </h4>
+        <p> {{requestDetails?.register.registersName}} </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Register No. </h4>
+        <p> {{requestDetails?.register.registerId}} </p>
+      </div>       
+    </div>
+    <div class="col-md-4">
+      <div class="card-sm">
+        <h4> Branch </h4>
+        <p> {{requestDetails?.register.branch.branchName}} </p>
+      </div>
+    </div>
+
+    <div class="col-md-7" *ngIf="type == 'approve'">
+      <div class="form-group ">
+        <label>Amount </label>
+        <input name="amount" type="number" class="form-control" placeholder="" appCheckAmount [(ngModel)]="amount">
+        <div *ngIf="msgError">
+          <span class="error py-2"> {{msgError}}</span>
+        </div>
+      </div>
+      <div class="card-sm">
+        <p> Register petty cash limit {{registerPettyCashAmount}} JD </p>
+      </div>
+    </div>
+
+    <div class="col-md-8" *ngIf="type == 'reject'">
+      <div class="form-group ">
+        <label>Reason </label>
+        <textarea class="form-control" [(ngModel)]="rejectionReason" maxlength="150"></textarea>
+        <div *ngIf="msgError">
+          <span class="error py-2"> {{msgError}}</span>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="alert alert-danger text-center my-2" role="alert" *ngIf="messageError">
+      {{messageError}}
+    </div>
+    <br>
+    <div class="btns-group mb-0 mx-0 mt-3">
+      <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+      <button type="submit" class="btn btn-save" *ngIf="type == 'approve'" (click)="ApprovePettyCashRequest()"> Approve
+      </button>
+      <button type="submit" class="btn btn-save" *ngIf="type == 'reject'" (click)="RejectPettyCashRequest()"> Reject
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="message" class="modal-body">
+  <div class="message">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>

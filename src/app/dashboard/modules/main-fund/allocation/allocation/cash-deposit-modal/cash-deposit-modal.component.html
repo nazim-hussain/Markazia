@@ -1,0 +1,204 @@
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="modal-head"><h3>Cash Deposit</h3></div>
+      <div class="separator"></div>
+
+      <div class="row" style="margin-top: 25px">
+        <div class="col-md-4">
+          <div class="flex-column">
+            <div class="mdtext">Bank Name</div>
+            <div class="smText">
+              {{ depositAmount?.sageBank?.bankName }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="flex-column">
+            <div class="mdtext">Account Name</div>
+            <div class="smText">
+              {{ depositAmount?.sageBank?.accountName }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="flex-column">
+            <div class="mdtext">Account No.</div>
+            <div class="smText">
+              {{ depositAmount?.sageBank?.accountNo }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 25px">
+        <div class="col-md-4">
+          <div class="flex-column">
+            <div class="mdtext">Currency</div>
+            <div class="smText">
+              {{ depositAmount?.currency[0]?.lookupName }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="flex-column">
+            <div class="mdtext">Distribute Amount</div>
+            <div class="smText">
+              {{ depositAmount?.distributedAmount }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+
+      <div class="flex-start" style="margin-top: 25px">
+        <div class="mdtext">Deposited Amount</div>
+        <input
+          name="name"
+          type="text"
+          class="form-control"
+          placeholder=""
+          name="InvoiceNo"
+          required
+          numbersOnly
+          appPreventMinus
+        />
+      </div>
+
+      <div style="margin-top: 25px">
+        <div class="largeText">
+          To Complete the process Please upload the bank deposit voucher
+        </div>
+      </div>
+
+      <ng-container>
+        <div class="row" *ngIf="isShowToUplaod" style="margin-top: 25px">
+          <div class="col-md-7">
+            <div class="form-group mb-3">
+              <label class="mdtext"> Attachment (Upload Bank Voucher) </label>
+              <div
+                class="card-upload my-3"
+                appImageDrag
+                (files)="filesDropped($event)"
+                (enter)="enter = !enter"
+                (leave)="enter = !enter"
+                accept=".png,.jpg,.jpeg,.pdf"
+                (click)="fileUpload.click()"
+              >
+                <div class="my-3">
+                  <img src="assets/images/upload.png" alt="" />
+                  <h5>Drag & drop files</h5>
+                  <p>Supported formates: JPEG, PNG, PDF</p>
+                </div>
+              </div>
+              <input
+                type="file"
+                class="form-control"
+                accept=".png,.jpg,.jpeg,.pdf"
+                (change)="onSelectFile($event)"
+                #fileUpload
+                id="uploadFile"
+                hidden
+              />
+            </div>
+          </div>
+
+          <div class="col-md-5"></div>
+          <div class="col-md-6" *ngIf="fileName">
+            <div class="form-group mb-3"></div>
+            <div class="card-upload" *ngIf="isViewFile">
+              <div class="card-img">
+                <img [src]="filePath" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6"></div>
+          <div class="col-md-8" *ngIf="fileName">
+            <div class="uploadedfile">
+              <p (click)="openMdalImage()">{{ fileName }}</p>
+              <div class="d-flex">
+                <button
+                  class="btn fview"
+                  type="button"
+                  (click)="openMdalImage()"
+                >
+                  <img src="assets/images/eye.png" alt="" />
+                </button>
+                <button type="button" class="btn" (click)="removeImageName()">
+                  <img src="assets/images/trash.png" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!isShowToUplaod">
+          <!-- && this.expenseDetails?.files.length != -->
+          <div class="col-md-8">
+            <div class="form-group mb-3">
+              <label class="mdtext"> Attachment </label>
+              <br />
+              <p class="smText">Deposit Check Voucher</p>
+              <!-- <p class="uplod">Uploading files</p> -->
+            </div>
+
+            <div class="fileView" *ngIf="isViewFile">
+              <!-- <img [src]="expenseDetails?.files[0]?.attachmentPath" alt="" /> -->
+            </div>
+            <div class="uploadedfile">
+              <p (click)="openMdalImageView()">Receipts -</p>
+              <div class="d-flex">
+                <button
+                  class="btn fview"
+                  type="button"
+                  (click)="openMdalImageView()"
+                >
+                  <img src="assets/images/eye.png" alt="" />
+                </button>
+                <button class="btn" type="button" (click)="removeImg()">
+                  <img src="assets/images/trash.png" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group" *ngIf="progress > 0">
+        <h3>{{ progress }} %</h3>
+        <div class="progress form-group">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+            [style.width.%]="progress"></div>
+        </div>
+      </div> -->
+        </div>
+
+        <!-- <div *ngIf="isLoadingView">
+          <div class="my-3 py-3">
+            <app-loading></app-loading>
+          </div>
+        </div> -->
+      </ng-container>
+
+      <!-- <div class="row d-flex justify-content-center" style="margin-top: 24px">
+        <div (click)="onSelectFile($event)" class="uploadButton uploadText">
+          Upload
+        </div>
+      </div> -->
+
+      <div class="flex-end" style="margin-top: 24px">
+        <div class="btns-group my-2 mx-0">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            (click)="activeModal.close('Close click')"
+          >
+            Cancel
+          </button>
+        </div>
+        <div class="btns-group my-2 mx-0">
+          <button type="submit" class="btn btn-save" *ngIf="!isLoading">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

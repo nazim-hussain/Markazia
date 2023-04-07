@@ -1,0 +1,109 @@
+<div class="side-nav-content">
+  <div
+    class="register-open"
+    *ngIf="
+      registerSessionCreatedAt &&
+      sharedService.getRole?.roleId == 1 &&
+      isIpAddres
+    "
+  >
+    <p>
+      Register Opening At
+      <span> {{ registerSessionCreatedAt | date : " h:mm a " }} </span>
+    </p>
+  </div>
+  <ul class="nav-list" [ngClass]="{ 'nav-list-open': sideNavStatus }">
+    <ng-container *ngFor="let item of navList; let i = index">
+      <ng-container *ngIf="item.type == sharedService.getRole?.roleId">
+        <ng-container>
+          <button
+            class="nav-list-item"
+            (click)="onSelectMenu(i)"
+            [routerLink]="item.url"
+            routerLinkActive="active"
+            #rla="routerLinkActive"
+          >
+            <img [src]="rla.isActive ? item.Icon2 : item.Icon" alt="" />
+            <span> {{ item.Title }}</span>
+          </button>
+        </ng-container>
+      </ng-container>
+
+      <!-- [disabled]="openreg == false && item.url == '/opening-register' ||
+        closereg == false && item.url == '/close-register' ||
+        clollectreg == false && item.url == '/collect'
+        " -->
+      <!-- sharedService.getRegister -->
+      <!-- sharedService.getOpenCloseRegesterPermissions == true && -->
+      <!-- <ng-container *ngIf="sharedService.getRole?.roleId == 1">
+        <span *ngIf="canOpenRegister == false"> </span>
+        <button class="nav-list-item" (click)="onSelectMenu(i)" [routerLink]='item.url' routerLinkActive="active"
+          #rla="routerLinkActive" [hidden]="
+               (sharedService.getOpenCloseRegesterPermissions == false || !sharedService.getRegister ) && item.url == '/opening-register'
+            || (sharedService.getOpenCloseRegesterPermissions == false || !sharedService.getRegister ) && item.url == '/close-register'
+            || (sharedService.getOpenCloseRegesterPermissions == false || !sharedService.getRegister ) && item.url == '/collect'
+            || ( !sharedService.getRegister ) && item.url == '/petty-cash'
+            ">
+          <img [src]="rla.isActive ? item.Icon2 : item.Icon" alt="">
+          <span> {{item.Title}} </span>
+        </button>
+      </ng-container> -->
+
+      <!-- <ng-container
+          *ngIf="sharedService.getCasherPermissions == false && item.IsSelect ==  sharedService.getCasherPermissions ">
+          <button class="nav-list-item" (click)="onSelectMenu(i)" [routerLink]='item.url' routerLinkActive="active"
+            #rla="routerLinkActive">
+            <img [src]="rla.isActive ? item.Icon2 : item.Icon" alt="">
+
+            <span> {{item.Title}} </span>
+          </button>
+        </ng-container> -->
+    </ng-container>
+  </ul>
+
+  <ul
+    class="nav-list"
+    [ngClass]="{ 'nav-list-open': sideNavStatus }"
+    *ngIf="sharedService.getRole?.roleId == 1"
+  >
+    <ng-container *ngFor="let item of cashierNavList; let i = index">
+      <button
+        class="nav-list-item"
+        (click)="onSelectMenuCashier(i)"
+        [routerLink]="item.url"
+        routerLinkActive="active"
+        #rla="routerLinkActive"
+        [disabled]="item.canClick == false"
+        [hidden]="item.canView == false"
+      >
+        <img [src]="rla.isActive ? item.Icon2 : item.Icon" alt="" />
+        <span> {{ item.Title }} </span>
+      </button>
+    </ng-container>
+  </ul>
+
+  <!-- <a [ngClass]="{'a-active': val.IsActive ===true }">{{val.Title}}</a> -->
+
+  <div *ngIf="sideNavStatus" class="col-xs-3">
+    <div style="position: fixed; top: 0; bottom: 40px">
+      <footer
+        style="position: fixed; bottom: 0; overflow: hidden; height: 150px"
+      >
+        <li class="nav-list-item">
+          <img src="../../../assets/images/help.png" alt="" />
+          <span> Help </span>
+        </li>
+        <li class="nav-list-item">
+          <img src="../../../assets/images/logout.png" alt="" />
+          <span (click)="logout()" style="cursor: pointer"> Logout </span>
+        </li>
+        <!-- <div class="list-group list-group-flush mx-3 mt-4">
+            <a> <span style="padding-right: 10px;"></span> <img src="../../../assets/images/help.png" alt=""> Help</a>
+          </div>
+          <div class="list-group list-group-flush mx-3 mt-4">
+            <a> <span style="padding-right: 10px;"></span> <img src="../../../assets/images/logout.png" alt=""> Logout</a>
+        </div> -->
+      </footer>
+    </div>
+  </div>
+</div>

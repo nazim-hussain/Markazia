@@ -1,0 +1,59 @@
+.modal-head {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+  h4 {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 25px;
+    text-transform: capitalize;
+    color: #1b212d;
+  }
+  p {
+    font-weight: 500;
+    font-size: 14px;
+    color: #929eae;
+    b {
+      color: #1b212d;
+    }
+  }
+}
+.modal-body {
+  padding: 30px;
+}
+.aboutreq {
+  p {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 25px;
+    color: #54595e;
+    padding: 15px 0px;
+  }
+}
+.card-sm {
+  margin: 10px 0px;
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1b212d;
+    margin-bottom: 5px;
+  }
+  p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #929eae;
+  }
+}
+.note {
+  background-color: #f0f0f0;
+  height: 120px;
+  border-radius: 6px;
+  margin: 5px 0px;
+  overflow: hidden;
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    padding: 10px;
+  }
+}

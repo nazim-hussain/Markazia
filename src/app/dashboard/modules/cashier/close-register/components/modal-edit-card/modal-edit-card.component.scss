@@ -1,0 +1,49 @@
+.card-form {
+  background: #ffffff;
+  border: 0px solid #c4cdd5;
+  box-shadow: none;
+  border-radius: 8px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.modal-head {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  h3 {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1b212d;
+  }
+  p {
+    font-weight: 500;
+    font-size: 14px;
+    color: #1b212d;
+    span {
+      color: #929eae;
+    }
+  }
+}
+.message {
+  padding: 50px 10px;
+  text-align: center;
+  h5 {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1b212d;
+    margin: 0px;
+    padding: 20px;
+  }
+  .fa-circle-check{
+    color: #25BB00;
+    font-size: 28px;
+    vertical-align: middle;
+    margin: 2px 10px 5px;
+  }
+  .fa-circle-xmark{
+    color: #DC3545;
+    font-size: 28px;
+    vertical-align: middle;
+    margin: 2px 10px 5px;
+  }
+}

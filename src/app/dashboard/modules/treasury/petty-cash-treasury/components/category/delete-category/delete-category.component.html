@@ -1,0 +1,23 @@
+<div class="modal-body" *ngIf="!message">
+
+  <div class="text">
+    <h4>
+      Are you sure to delete the following <br>
+      category <span>{{expenseDetails.description}} </span> ?
+    </h4>
+  </div>
+  <div class="alert alert-danger text-center my-2" role="alert" *ngIf="messageError">
+    {{messageError}}
+  </div>
+  <div class="btns-group mb-0 mx-0 mt-3">
+    <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">No</button>
+    <button type="submit" class="btn btn-save" (click)="Delete()"> Yes
+    </button>
+  </div>
+</div>
+   
+<div *ngIf="message" class="modal-body">
+  <div class="message">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>

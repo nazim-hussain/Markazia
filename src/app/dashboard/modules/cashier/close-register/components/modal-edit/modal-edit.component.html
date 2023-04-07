@@ -1,0 +1,89 @@
+<div class="modal-body">
+
+  <div class="modal-head">
+    <h3>Edit Cheque </h3>
+    <p> Customer name <b class="px-2"> {{ this.details.chequeCustomer}} </b> </p>
+  </div>
+  <div class="card-form" *ngIf="!type">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Paid Amount</label>
+            <input name="name" type="text" class="form-control" placeholder="500 JD"
+              formControlName="ChequeCollectionJod" name="ChequeCollectionJod" readonly>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Cheque No. </label>
+            <input name="name" type="text" class="form-control" placeholder="Cheque No." formControlName="ChequeNo"
+              name="ChequeNo" required numbersOnly appPreventMinus>
+            <div *ngIf="submitted && formValid['ChequeNo'].invalid ||  formValid['ChequeNo'].invalid">
+              <span class="error" *ngIf="formValid['ChequeNo'].errors['required']">
+                Cheque no is required.</span>
+              <span class="error" *ngIf="formValid['ChequeNo'].errors['min']">
+                Cheque no can not be 0 </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Bank</label>
+            <ng-select id="BankId" placeholder=" Select bank " [items]="banks" bindLabel="name" bindValue="id"
+              formControlName="BankId" name="BankId" required>
+            </ng-select>
+            <!--   <div
+              *ngIf="submitted && formValid['BankId'].invalid || formValid['BankId'].invalid && (formValid['BankId'].dirty || formValid['BankId'].touched)"
+              class="ng-dirty">
+              <span class="error" *ngIf="formValid['BankId'].errors['required']">
+                This element is required, please fill.
+              </span>
+            </div> -->
+            <div *ngIf="submitted && formValid['BankId'].invalid || formValid['BankId'].invalid">
+              <span class="error" *ngIf="formValid['BankId'].errors['required']">
+                Bank is required.</span>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Cheque Drawer name </label>
+            <input name="name" type="text" class="form-control" placeholder="Cheque Drawer name"
+              formControlName="ChequeDrawerName" name="ChequeDrawerName" OnlyCharacter required>
+            <div *ngIf="submitted && formValid['ChequeDrawerName'].invalid || formValid['ChequeDrawerName'].invalid">
+              <div class="error" *ngIf="formValid['ChequeDrawerName'].errors['required']"> Name is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Date * </label>
+            <input type="date" class="form-control" placeholder="" formControlName="ChequeDate" name="ChequeDate"
+              required>
+            <div *ngIf="submitted && formValid['ChequeDate'].invalid || formValid['ChequeDate'].invalid">
+              <div class="error" *ngIf="formValid['ChequeDate'].errors['required']"> Date is required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="btns-group my-2">
+            <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+            <button type="submit" class="btn btn-save"> Submit </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="message" *ngIf="type && type == 'success'">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>
+<!-- <div class="modal-footer text-center"> -->
+<!-- <button type="button" class="btn" (click)="confirm()">Submit</button> -->
+<!-- <button type="button" class="btn " (click)="activeModal.close('Close click')">Cancel</button> -->
+<!-- </div> -->

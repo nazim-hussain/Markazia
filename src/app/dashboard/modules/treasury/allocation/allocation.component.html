@@ -1,0 +1,27 @@
+<div class="card-page">
+    <div class="row">
+      <div class="col-md-12 display-flex">
+        <div class="branchesTypes">
+          <button class="btn active" (click)="goToPage(1)" [class.active]="selected == 1"> Accounts and Main Fund Cash</button>
+          <button class="btn" (click)="goToPage(2)" [class.active]="selected == 2"> Allocation Orders Log </button>
+
+         
+        </div>
+        <div class="btnadd">
+            <button  *ngIf="!iscreateAllocation;" class="btn btn-add" (click)="createAlocation()"> <img src="assets/images/plus.png" alt=""> Create Allocation Order
+            </button>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="tab-content">
+            <main-fund *ngIf="!iscreateAllocation; else createallocation"></main-fund>
+            <ng-template #createallocation>
+              <create-allocation></create-allocation>
+            </ng-template>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  

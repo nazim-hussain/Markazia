@@ -1,0 +1,10 @@
+<div class="message" *ngIf="name == 'ok'">
+  <h5> <i class="fa-regular fa-circle-check"></i> The session has been opened successfully </h5>
+</div>
+
+<div class="message" *ngIf="name == 'no'">
+  <h5 *ngFor=" let item of errors"> <i class="fa-regular fa-circle-xmark"></i> {{item.ErrorMessageEn}} </h5>
+  <!-- <ul>
+    <li *ngFor=" let item of errors"> {{item.ErrorMessageEn}}</li>
+  </ul> -->
+</div>

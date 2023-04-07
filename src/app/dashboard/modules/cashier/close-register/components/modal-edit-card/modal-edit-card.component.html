@@ -1,0 +1,114 @@
+<div class="modal-body">
+
+  <div class="modal-head">
+    <h3>Edit Card </h3>
+    <p> Customer name <b class="px-2"> {{ this.details.customer}} </b> </p>
+  </div>
+  <div class="card-form" *ngIf="!type">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Paid Amount</label>
+            <input name="name" type="text" class="form-control" placeholder="500 JD"
+              formControlName="LastCollectedAmount" name="LastCollectedAmount" readonly>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Invoice No.*</label>
+            <input name="name" type="text" class="form-control" placeholder="" formControlName="CardInvoiceNo"
+              name="CardInvoiceNo" required numbersOnly appPreventMinus>
+            <div *ngIf="submitted && formValid['CardInvoiceNo'].invalid || formValid['CardInvoiceNo'].invalid">
+              <span class="error" *ngIf="formValid['CardInvoiceNo'].errors['required']">
+                Field is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Terminal ID*</label>
+            <input name="name" type="text" class="form-control" placeholder="" formControlName="LastTerminalId"
+              name="LastTerminalId" required numbersOnly appPreventMinus>
+            <div *ngIf="submitted && formValid['LastTerminalId'].invalid || formValid['LastTerminalId'].invalid">
+              <span class="error" *ngIf="formValid['LastTerminalId'].errors['required']">
+                Field is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Date *</label>
+            <input type="date" class="form-control" placeholder="" formControlName="CardDate" name="CardDate" required>
+            <div *ngIf="submitted && formValid['CardDate'].invalid || formValid['CardDate'].invalid">
+              <span class="error" *ngIf="formValid['CardDate'].errors['required']">
+                Field is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>The first 6 digits of the card</label>
+            <input name="name" type="text" class="form-control" placeholder="" formControlName="CardFirst6Digits"
+              name="CardFirst6Digits" minlength="6" maxlength="6" numbersOnly required appPreventMinus>
+            <div *ngIf="submitted && formValid['CardFirst6Digits'].invalid || formValid['CardFirst6Digits'].invalid">
+              <span class="error"
+                *ngIf="formValid['CardFirst6Digits'].errors['required'] || formValid['CardFirst6Digits'].errors['minlength']">
+                This filed is required, You must enter 6 digits</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>The last 4 digits of the card</label>
+            <input name="name" type="text" class="form-control" placeholder="" formControlName="CardLast4Digits"
+              name="CardLast4Digits" minlength="4" maxlength="4" numbersOnly required appPreventMinus>
+            <div *ngIf="submitted && formValid['CardLast4Digits'].invalid || formValid['CardLast4Digits'].invalid">
+              <span class="error"
+                *ngIf="formValid['CardLast4Digits'].errors['required'] || formValid['CardLast4Digits'].errors['minlength']">
+                Field is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Payer Name</label>
+            <input name="name" type="text" class="form-control" placeholder="" formControlName="CardDrawerName"
+              name="CardDrawerName" OnlyCharacter required>
+            <div *ngIf="submitted && formValid['CardDrawerName'].invalid || formValid['CardDrawerName'].invalid">
+              <span class="error" *ngIf="formValid['CardDrawerName'].errors['required']">
+                Field is required.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label>Bank</label>
+            <ng-select id="BankId" placeholder=" Select bank " [items]="banks" bindLabel="name" bindValue="id"
+              formControlName="BankId" name="bankId" required>
+            </ng-select>
+            <div *ngIf="submitted && formValid['BankId'].invalid || formValid['BankId'].invalid">
+              <span class="error" *ngIf="formValid['BankId'].errors['required']">
+                Bank is required.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="btns-group my-2">
+            <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+            <button type="submit" class="btn btn-save"> Submit </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="message" *ngIf="type && type == 'success'">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>
+<!-- <div class="modal-footer text-center"> -->
+<!-- <button type="button" class="btn" (click)="confirm()">Submit</button> -->
+<!-- <button type="button" class="btn " (click)="activeModal.close('Close click')">Cancel</button> -->
+<!-- </div> -->

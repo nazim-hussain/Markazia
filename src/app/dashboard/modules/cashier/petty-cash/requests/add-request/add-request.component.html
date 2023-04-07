@@ -1,0 +1,129 @@
+<div class="modal-body" *ngIf="type == 'add'">
+  <div class="modal-head">
+    <h4>New Request</h4>
+  </div>
+  <div class="aboutreq">
+    <br>
+    <p>You are about to request a new petty cash for the following register</p>
+  </div>
+  <div class="row" *ngIf="Registersdetails">
+    <div class="col-sm-3">
+      <div class="card-sm">
+        <h4> Branch Name </h4>
+        <p> {{Registersdetails.branch.branchName}} </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card-sm">
+        <h4> Register No. </h4>
+        <p> {{Registersdetails.id}} </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card-sm">
+        <h4> Register Name</h4>
+        <p> {{Registersdetails.registersName}} </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card-sm">
+        <h4> Requested Amount </h4>
+        <p> {{Registersdetails.pettyCashLimit}} JD</p>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group my-3">
+        <div class="card-sm">
+          <h4> Note </h4>
+        </div>
+        <textarea rows="5" class="form-control" [(ngModel)]="textNote" name="" maxlength="150"></textarea>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="alert alert-danger text-center" role="alert" *ngIf="errorMsg">
+        {{errorMsg}}
+      </div>
+    </div>
+
+    <div class="col-md-12">
+
+      <div class="btns-group my-2 mx-0">
+        <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+        <button type="button" (click)="AddPettyCashRequest()" class="btn btn-save" *ngIf="!isLoading">
+          Add </button>
+        <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+            class="fa-solid fa-circle-notch fa-spin"></i></button>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+<div class="modal-body" *ngIf="type == 'view'">
+  <div class="modal-head d-flex justify-content-between">
+    <h4>Request Details </h4>
+    <p *ngIf="details"> <b> Date</b> {{details.createdAt | date:' d/M/y '}}</p>
+  </div>
+  <div class="aboutreq">
+
+    <div class="row" *ngIf="details">
+      <div class="col-sm-3">
+        <div class="card-sm">
+          <h4> Branch Name </h4>
+          <p> {{details.register.branch.branchName}} </p>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card-sm">
+          <h4> Register No. </h4>
+          <p> {{details.register.registerId}} </p>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card-sm">
+          <h4> Register Name</h4>
+          <p> {{details.register.registersName}} </p>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card-sm">
+          <h4> Requested Amount </h4>
+          <p> {{details.requestedAmount }} JD</p>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card-sm">
+          <h4 class="mb-3"> Status </h4>
+          <span class="pending" [style.background-color]="details.statusObj.lookupBGColor"
+            [style.color]="details.statusObj.lookupTextColor"> {{details.statusObj.description}} </span>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <div class="card-sm">
+          <h4> Note </h4>
+          <div class="note">
+            <p> {{details.requestNote}} </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6" *ngIf="details.statusObj.description == 'Rejected' ">
+        <div class="card-sm">
+          <h4> Rejected Reason </h4>
+          <div class="note">
+            <p> {{details.rejectionReason}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="btns-group my-2 mx-0">
+          <button type="button" class="btn btn-save" (click)="activeModal.close('Close click')">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>

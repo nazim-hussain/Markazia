@@ -1,0 +1,392 @@
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="modal-head">
+        <div>
+          <h3 *ngIf="!isShowExpense"> {{expenseId ? ' Expense Details ' : 'Add Expense '}} </h3>
+          <h3 *ngIf="isShowExpense "> Edit Expense </h3>
+        </div>
+        <div *ngIf="expenseDetails" class="info">
+          <p class="invoic" *ngIf="!isPending && expenseId"> <b> Invoice No </b> {{expenseDetails?.invoiceNo }} </p>
+          <p class="mb-0" *ngIf="isPending && expenseId"> <b> Employee </b> {{expenseDetails?.createdBy?.fullName }}
+          </p>
+          <p> <b> Date </b> {{expenseDetails?.createdAt | date:'d/M/yyyy'}} </p>
+        </div>
+      </div>
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="card-form position-relative">
+          <div class="row mt-3">
+            <div class="col-md-12 mt-3" *ngIf="isPending">
+              <div class="edit-btn float-end" *ngIf="expenseId">
+                <button class="btn" type="button" (click)="editExpenseInfo()">
+                  <img src="assets/images/edit.png" *ngIf="isShowExpense " class="save-img" alt="">
+                  <img src="assets/images/edit5.png" *ngIf="!isShowExpense" alt="">
+                </button>
+              </div>
+            </div>
+            <ng-container *ngIf="type == 'add' || isPending  ">
+              <ng-container *ngIf="!isLoadingView">
+
+                <div class="col-md-6 col-sm-12">
+                  <div class="form-group mb-3">
+                    <label>Category *</label>
+                    <ng-select placeholder="Select category" [items]="expenseCategory" bindLabel="name" bindValue="id"
+                      formControlName="ExpenseCategoryId" name="ExpenseCategoryId" required>
+                    </ng-select>
+                    <!-- [disabled]="(!isShowExpense && expenseId) ? true : false" -->
+                    <div
+                      *ngIf="submitted && formValid['ExpenseCategoryId'].invalid || formValid['ExpenseCategoryId'].invalid  && (formValid['ExpenseCategoryId'].dirty || formValid['ExpenseCategoryId'].touched)">
+                      <span class="error" *ngIf="formValid['ExpenseCategoryId'].errors['required']">
+                        This field is required
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group ">
+                    <label>Invoice Number *</label>
+                    <input name="name" type="text" class="form-control" placeholder="" formControlName="InvoiceNo"
+                      name="InvoiceNo" required numbersOnly appPreventMinus [readOnly]="!isShowExpense && expenseId">
+                    <div
+                      *ngIf="submitted && formValid['InvoiceNo'].invalid || formValid['InvoiceNo'].invalid && (formValid['InvoiceNo'].dirty || formValid['InvoiceNo'].touched)">
+                      <span class="error" *ngIf="formValid['InvoiceNo'].errors['required']">
+                        This field is required
+                      </span>
+                    </div>
+                    <span class="error"
+                      *ngIf="formGroup.get('InvoiceNo').value && formGroup.get('InvoiceNo').value == 0 ">
+                      InvoiceNo can not be 0 </span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group ">
+                    <label>Amount </label>
+                    <input name="ExpenseAmount" type="number" class="form-control" placeholder="" appCheckAmount
+                      formControlName="ExpenseAmount" name="ExpenseAmount" [readOnly]="!isShowExpense && expenseId">
+                    <!-- <div
+                    *ngIf="submitted && formValid['ExpenseAmount'].invalid || formValid['ExpenseAmount'].invalid && (formValid['ExpenseAmount'].dirty || formValid['ExpenseAmount'].touched)">
+                    <span class="error pb-0" *ngIf="formValid['ExpenseAmount'].errors['required']">
+                      This field is required
+                    </span>
+                  </div> -->
+                    <div *ngIf="formGroup.get('ExpenseAmount').value < 0 && formGroup.get('ExpenseAmount').touched">
+                      <span class="error pt-1"> Amount must be greater than 0 </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group ">
+                    <label>Tax </label>
+                    <input name="name" type="number" class="form-control" placeholder="" formControlName="ExpenseTax"
+                      name="ExpenseTax" [readOnly]="!isShowExpense && expenseId" appCheckAmount>
+                    <!-- <div
+                    *ngIf="submitted && formValid['ExpenseTax'].invalid || formValid['ExpenseTax'].invalid  && (formValid['ExpenseTax'].dirty || formValid['ExpenseTax'].touched)">
+                    <span class="error" *ngIf="formValid['ExpenseTax'].errors['required']">
+                      This field is required
+                    </span>
+                  </div> -->
+                    <div *ngIf="formGroup.get('ExpenseTax').value < 0 && formGroup.get('ExpenseTax').touched">
+                      <span class="error pt-1"> Tax must be greater than or equal 0 </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group ">
+                    <label>Total Amount * </label>
+                    <input name="ExpenseTotalAmount" type="number" class="form-control" placeholder=""
+                      formControlName="ExpenseTotalAmount" name="ExpenseTotalAmount"
+                      [readOnly]="!isShowExpense && expenseId" required appCheckAmount>
+                    <div
+                      *ngIf="submitted && formValid['ExpenseTotalAmount'].invalid || formValid['ExpenseTotalAmount'].invalid && (formValid['ExpenseTotalAmount'].dirty || formValid['ExpenseTotalAmount'].touched)">
+                      <span class="error pb-0" *ngIf="formValid['ExpenseTotalAmount'].errors['required']">
+                        This field is required
+                      </span>
+                    </div>
+                    <div
+                      *ngIf="formGroup.get('ExpenseTotalAmount').value <= 0 && formGroup.get('ExpenseTotalAmount').touched">
+                      <span class="error pt-1"> Total amount must be greater than 0 </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group " *ngIf="expenseDetails">
+                    <label> Status </label>
+                    <div class="mt-3">
+                      <span class="pending" [style.background-color]="expenseDetails.statusObj.lookupBGColor"
+                        [style.color]="expenseDetails.statusObj.lookupTextColor">
+                        {{expenseDetails.statusObj.description}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="isShowToUplaod ">
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label> Attachment * </label>
+                      <div class="card-upload my-3" appImageDrag (files)="filesDropped($event)" (enter)="enter = !enter"
+                        (leave)="enter = !enter" accept=".png,.jpg,.jpeg,.pdf" (click)="fileUpload.click()">
+                        <div class="my-3">
+                          <img src="assets/images/upload.png" alt="">
+                          <h5>Drag & drop files</h5>
+                          <p>Supported formates: JPEG, PNG, PDF</p>
+                        </div>
+                      </div>
+                      <input type="file" class="form-control" accept=".png,.jpg,.jpeg,.pdf"
+                        (change)="onSelectFile($event)" #fileUpload id="uploadFile" hidden />
+                    </div>
+                  </div>
+
+                  <div class="col-md-6"></div>
+                  <div class="col-md-6" *ngIf="fileName">
+                    <div class="form-group mb-3">
+                      <!-- <p class="uplod">Uploading files</p> -->
+                    </div>
+                    <div class="card-upload" *ngIf="isViewFile">
+                      <div class="card-img">
+                        <img [src]="filePath" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6"></div>
+                  <div class="col-md-8" *ngIf="fileName">
+                    <!-- <a [href]="filePath" targrt> pdf </a> -->
+                    <div class="uploadedfile">
+                      <p (click)="openMdalImage()">{{fileName}}</p>
+                      <div class="d-flex">
+                        <button class="btn fview" type="button" (click)="openMdalImage()">
+                          <img src="assets/images/eye.png" alt=""> </button>
+                        <button type="button" class="btn" (click)="removeImageName()"> <img
+                            src="assets/images/trash.png" alt=""> </button>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- <div class="col-md-6" *ngFor="let url of urls; let i = index">
+                <div class="card-upload">
+                  <div class="card-img">
+                    <img [src]="url" />
+                  </div>
+                  <button (click)="removeImage(i)" type="button" class="btn btn-remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div> -->
+                </div>
+                <div class="row" *ngIf="!isShowToUplaod">
+                  <!-- && this.expenseDetails?.files.length != -->
+                  <div class="col-md-8">
+                    <div class="form-group mb-3">
+                      <label> Attachment * </label>
+                      <br>
+                      <!-- <p class="uplod">Uploading files</p> -->
+                    </div>
+
+                    <div class="fileView" *ngIf="isViewFile">
+                      <img [src]="expenseDetails?.files[0]?.attachmentPath" alt="">
+                    </div>
+                    <div class="uploadedfile">
+                      <p (click)="openMdalImageView()"> Receipts - {{formGroup.get('ExpenseRecordId').value}} </p>
+                      <div class="d-flex">
+                        <button class="btn fview" type="button" (click)="openMdalImageView()">
+                          <img src="assets/images/eye.png" alt=""> </button>
+                        <button class="btn" type="button" (click)="removeImg()"
+                          [disabled]="!isShowExpense && expenseId">
+                          <img src="assets/images/trash.png" alt=""> </button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- <div class="form-group" *ngIf="progress > 0">
+                <h3>{{ progress }} %</h3>
+                <div class="progress form-group">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    [style.width.%]="progress"></div>
+                </div>
+              </div> -->
+                </div>
+                <!--
+            <div>
+              value: {{formGroup.get('Attachments').value}}
+              <br>
+              invalid: {{formValid['Attachments'].invalid }}
+            </div> -->
+                <div *ngIf="errorMsgUplaod">
+                  <span class="error">
+                    {{errorMsgUplaod}}
+                  </span>
+                </div>
+                <div *ngIf="submitted && !formGroup.get('Attachments').value">
+                  <span class="error">
+                    This field is required
+                  </span>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-8" *ngIf="progress > 0">
+                    <p class="mb-1 mt-3"> {{ progress }} % </p>
+                    <div class="progress" role="progressbar" aria-label="Example 5px high" aria-valuenow="25"
+                      aria-valuemin="0" aria-valuemax="100" style="height: 5px">
+                      <div class="progress-bar" [style.width.%]="progress"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="form-group" *ngIf="progress > 0">
+              <h3>{{ progress }} % </h3>
+              <div class="progress form-group">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  [style.width.%]="progress"
+                ></div>
+              </div>
+            </div> -->
+                <!-- <div class="progress form-group">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                [style.width.%]="50"
+              ></div>
+            </div> -->
+
+
+                <!-- <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+              <div class="progress-bar" style="width: 25%"></div>
+            </div> -->
+                <!-- <div
+              *ngIf="submitted && formValid['Attachments'].invalid || formValid['Attachments'].invalid  && (formValid['Attachments'].dirty || formValid['Attachments'].touched)">
+              <span class="error" *ngIf="formValid['Attachments'].errors['required']">
+                This field is required
+              </span>
+            </div> -->
+                <div class="col-md-12">
+                  <div class="form-group my-3">
+                    <label> Notes </label>
+                    <textarea rows="5" class="form-control" formControlName="ExpenseNotes" name="ExpenseNotes"
+                      maxlength="200" [readOnly]="!isShowExpense && expenseId"></textarea>
+                    <!-- <div
+                  *ngIf="submitted && formValid['ExpenseNotes'].invalid ||  formValid['ExpenseNotes'].invalid && (formValid['ExpenseNotes'].dirty || formValid['ExpenseNotes'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['ExpenseNotes'].errors['maxlength']">
+                    <span class="error"> Full name length must be between 6 and 30 characters.</span>
+                  </span>
+                </div> -->
+
+                  </div>
+                </div>
+
+              </ng-container>
+
+              <div *ngIf="isLoadingView">
+                <div class="my-3 py-3">
+                  <app-loading></app-loading>
+                </div>
+              </div>
+
+            </ng-container>
+          </div>
+
+
+          <ng-container *ngIf="type != 'add' && !isPending">
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4> Employe Name </h4>
+                  <p> {{expenseDetails?.createdBy.fullName}} </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4> Category</h4>
+                  <p> {{expenseDetails?.category[0].lookupName}} </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4> Total Amount </h4>
+                  <p> {{expenseDetails?.expenseTotalAmount}} </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4> Amount </h4>
+                  <p> {{expenseDetails?.expenseAmount}} </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4> Tax </h4>
+                  <p> {{expenseDetails?.expenseTax}} </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-sm">
+                  <h4 class="mb-3"> Status </h4>
+                  <span class="pending mt-2" [style.background-color]="expenseDetails?.statusObj?.lookupBGColor"
+                    [style.color]="expenseDetails?.statusObj?.lookupTextColor">
+                    {{expenseDetails?.statusObj?.description}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="form-group mb-3">
+                  <label> Attachment * </label>
+                  <br>
+                  <!-- <p class="uplod">Uploading files</p> -->
+                </div>
+                <div class="fileView" *ngIf="isViewFile">
+                  <img [src]="expenseDetails?.files[0]?.attachmentPath" alt="">
+                </div>
+                <div class="uploadedfile">
+                  <p (click)="openMdalImageView()"> Receipts - {{formGroup.get('ExpenseRecordId').value}} </p>
+                  <div class="d-flex">
+                    <button class="btn fview" type="button" (click)="openMdalImageView()">
+                      <img src="assets/images/eye.png" alt=""> </button>
+                    <a class="btn fview" type="button" [href]="expenseDetails?.files[0]?.attachmentPath" download>
+                      <img src="assets/images/Download.png" alt=""> </a>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-12 my-2">
+                <div class="card-sm  ">
+                  <h4> Note </h4>
+                  <div class="note">
+                    <p> {{expenseDetails?.expenseNotes}} </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 my-2" *ngIf="expenseDetails?.statusObj.description == 'Rejected'">
+                <div class="card-sm  ">
+                  <h4> Reject Reason </h4>
+                  <div class="note">
+                    <p> {{expenseDetails?.rejectionReason}} </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </ng-container>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="btns-group my-2 mx-0" *ngIf="!isPending && expenseId">
+              <button type="button" class="btn btn-save" (click)="activeModal.close('Close click')">Close</button>
+            </div>
+            <div class="btns-group my-2 mx-0" *ngIf="type == 'add' || expenseId && isPending">
+              <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+              <button type="submit" class="btn btn-save" *ngIf="!isLoading" [disabled]="!isShowExpense && expenseId">
+                Save </button>
+              <button type="button" class="btn btn-save btn-load" *ngIf="isLoading" disabled><i
+                  class="fa-solid fa-circle-notch fa-spin"></i></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

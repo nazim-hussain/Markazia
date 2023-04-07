@@ -1,0 +1,181 @@
+<div class="card-page">
+  <div class="row" *ngIf="details; let details; else loading">
+    <div class="col-md-12">
+      <div class="top-details">
+        <p>
+          Date <span> {{details.order.orderDate | date:' d MMM y '}} </span>
+          &nbsp; Time <span> {{details.order.orderDate | date:' h:mm a '}} </span>
+        </p>
+        <p> <span> Invoice No. {{details.order.invoiceNo}} </span> </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-collect customerDetail">
+        <h3> Customer Details </h3>
+        <div class="collect-details">
+          <div class="char"> {{custmerName}} </div>
+          <div>
+            <div class="card-sm">
+              <h4> {{details.customer.customerName}}</h4>
+              <p>{{details.customer.email}}</p>
+            </div>
+            <div class="card-sm">
+              <h4> Customer No </h4>
+              <p> {{details.customer.mobile }} </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card-collect">
+        <h3 style="margin-bottom: 20px;"> Vehicle Details </h3>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4 *ngIf="detailsType == 'service'"> Brand name </h4>
+                  <h4 *ngIf="detailsType == 'payment' || detailsType == 'spare'"> Vehicle </h4>
+                  <p> {{details.vin.brandName ? details.vin.brandName : 'No data'}}
+                    {{details.vin.modelName}}
+                    {{details.vin.modelYear}} </p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card-sm" *ngIf="detailsType == 'service'">
+                  <h4> Vehicle Model</h4>
+                  <p> {{details.vin.modelName ? details.vin.modelName : 'No data'}}</p>
+                </div>
+                <div class="card-sm" *ngIf="detailsType == 'payment' || detailsType == 'spare'">
+                  <h4> Cash Card No</h4>
+                  <p class="mb-1">
+                    <span *ngFor="let num of details.order.directPaymentCards"> {{num}} </span>
+                  </p>
+                </div>
+
+              </div>
+              <div class="col-sm-4">
+                <div class="card-sm" *ngIf="detailsType == 'service'">
+                  <h4> Card No </h4>
+                  <ng-container *ngIf="details.order.workingCards.length != 0 ">
+                    <p class="mb-1" *ngFor="let num of details.order.workingCards | slice:0:1"> {{num}} </p>
+                  </ng-container>
+
+                  <p class="mb-1" *ngIf="details.order.workingCards.length == 0 "> No data</p>
+                </div>
+                <div class="card-sm " *ngIf=" detailsType == 'spare'">
+                  <h4> Opportunity No</h4>
+                  <p> {{details.order.sparePartsSalesOrderOpportunityNo}} </p>
+                </div>
+                <div class="card-sm " *ngIf="detailsType == 'payment'">
+                  <h4> Opportunity No</h4>
+                  <p> {{details.order.directPaymentSalesOrderOpportunityNo}} </p>
+                </div>
+              </div>
+            </div>
+            <hr class="v-line">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4> Vin No</h4>
+                  <p> {{details.vin.vinNo}}</p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card-sm">
+                  <h4>Plate No. </h4>
+                  <p> {{details.vin.plateNumber}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-sm-3 l-line" *ngIf="detailsType == 'service'">
+            <div class="card-sm">
+              <h4> Service Advisor</h4>
+              <p> {{details.serviceAdvisor.serviceAdvisorName}}</p>
+            </div>
+            <div class="card-sm">
+              <h4> Sales order No </h4>
+              <p> {{details.order.servicesSalesOrderNo}}</p>
+            </div>
+          </div>
+          <div class="col-sm-3" *ngIf="detailsType == 'payment' || detailsType == 'spare'">
+            <div class="card-sm">
+              <h4> Sales Consultant</h4>
+              <p> {{details.salesConsultant.salesConsultantName}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-12" *ngIf="detailsType == 'service'">
+      <app-spare></app-spare>
+    </div>
+
+    <div class="col-md-12" *ngIf="detailsType == 'service'">
+      <app-labor></app-labor>
+    </div>
+
+    <div class="col-md-12" *ngIf="detailsType == 'service'">
+      <app-sublet></app-sublet>
+    </div>
+    <div class="col-md-12" *ngIf="detailsType == 'spare'">
+      <app-spare-parts></app-spare-parts>
+    </div>
+
+
+    <div class="col-md-12">
+      <div class="card-collect">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group" *ngIf="detailsType == 'payment'">
+              <label> Remaining Amount to pay</label>
+              <input type="text" class="form-control" [value]="details.order.remainingAmount" disabled>
+              <br>
+            </div>
+            <div class="form-group">
+              <label> Sales note </label>
+              <textarea class="form-control" [value]="details.order.salesNote" rows="3" disabled></textarea>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="total-card justify-content-end pt-75">
+              <p *ngIf="detailsType == 'spare'"> Total Amount </p>
+              <p *ngIf="detailsType == 'payment' || detailsType == 'service'"> Grand Amount </p>
+              <div class="total"> {{details.order.grandAmount}} JD </div>
+              <button class="btn" (click)="openModalPayment()"
+                [disabled]="(details.order.status[0].statusId != 10001 && details.order.status[0].statusId != 10003 && details.order.status[0].statusId != 10005)">
+                Collect </button>
+            </div>
+          </div>
+          <div class="col-md-6">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="btns-group px-0 mx-0">
+        <button type="button" class="btn btn-cancel" routerLink="/collect">Cancel</button>
+        <button type="button" class="btn btn-save" (click)="NeedModify()"
+          [disabled]="(details.order.status[0].statusId != 10001 && details.order.status[0].statusId != 10003 && details.order.status[0].statusId != 10005)">
+          Need Modify</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <ng-template #loading>
+          <div>
+            <app-loading></app-loading>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

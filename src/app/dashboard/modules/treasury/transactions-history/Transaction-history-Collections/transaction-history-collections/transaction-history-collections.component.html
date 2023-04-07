@@ -1,0 +1,41 @@
+<div class="card-page">
+  <div class="flex-start">
+    <!-- 1 -->
+    <div class="cardBox" (click)="goToPage(1)" [class.active]="selected == 1">
+      <div class="currencyBox"><h4>JOD</h4></div>
+
+      <div class="amountArea">
+        <div class="boxText">Direct Payment</div>
+        <div class="boxText">
+          {{ collectedAmount?.amountCollectedInDirectPayments }}
+        </div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="cardBox" (click)="goToPage(2)" [class.active]="selected == 2">
+      <div class="currencyBox"><h4>JOD</h4></div>
+
+      <div class="amountArea">
+        <div class="boxText">Service Center</div>
+        <div class="boxText">
+          {{ collectedAmount?.amountCollectedInServices }}
+        </div>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="cardBox" (click)="goToPage(3)" [class.active]="selected == 3">
+      <div class="currencyBox">
+        <h4>JOD</h4>
+      </div>
+
+      <div class="amountArea">
+        <div class="boxText">Spare Parts</div>
+        <div class="boxText">
+          {{ collectedAmount?.amountsCollectedInSpareParts }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-direct-payments *ngIf="selected == 1"></app-direct-payments>

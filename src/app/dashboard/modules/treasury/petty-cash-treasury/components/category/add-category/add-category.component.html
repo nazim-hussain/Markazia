@@ -1,0 +1,58 @@
+<div class="modal-body" *ngIf="!message">
+  <div class="modal-head" *ngIf="expenseDetails == 'item'; else editcategory">
+    <h3> Add New Category</h3>
+  </div>
+  <ng-template  #editcategory>
+    <div class="modal-head">
+      <h3 class="edit-category"> Edit Category</h3>
+    </div>
+  </ng-template>
+  <div class="row">
+
+    <div class="col-md-7">
+      <div class="form-group ">
+        <label>Category Name </label>
+        <input name="categoryName" type="text" class="form-control" placeholder="" [(ngModel)]="CategoryName"
+        OnlyCharacter>
+          
+        <div *ngIf="msgError">
+          <span class="error py-2"> {{msgError}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <br>
+      <br>
+      <div class="form-check form-switch">
+        <label class="labelactive">Active</label>
+        <br>
+        <input class="form-check-input" [(ngModel)]="isStatus" name="isStatus" type="checkbox" role="switch"
+          (change)="chooseStatus()" [ngModelOptions]="{standalone: true}">
+      </div>
+    </div>
+
+    <br> 
+    <br>
+    <br>
+    <div class="alert alert-danger text-center my-2" role="alert" *ngIf="messageError">
+      {{messageError}}
+    </div>
+    <br>
+    <div class="btns-group mb-0 mx-0 mt-3">
+      <button type="button" class="btn btn-cancel" (click)="activeModal.close('Close click')">Cancel</button>
+      <button type="submit" *ngIf="expenseDetails == 'item'; else editBtn" class="btn btn-save" (click)="submit()"> Add
+      </button>
+      <ng-template #editBtn>
+        <button type="submit" class="btn btn-save" (click)="submit()">Save</button>
+        
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="message" class="modal-body">
+  <div class="message">
+    <h5> <i class="fa-regular fa-circle-check"></i> {{message}}</h5>
+  </div>
+</div>

@@ -1,0 +1,318 @@
+<!-- <h4>Roles</h4> -->
+<div class="card-page">
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Registers Information </h3>
+        </div>
+        <div class="card-form overflow-hidden position-relative">
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group overflow-hidden position-relative ">
+                <label>Registers Name *</label>
+                <input formControlName="registersName" name="registersName" type="text" class="form-control"
+                  placeholder="Type name " required minlength="6" maxlength="30">
+                <button class="btn btn-remove" *ngIf="formGroup.get('registersName').value"
+                  (click)="removeBranchName()"><i class="fa-solid fa-xmark"></i> </button>
+                <div
+                  *ngIf="submitted && formValid['registersName'].invalid ||  formValid['registersName'].invalid && (formValid['registersName'].dirty || formValid['registersName'].touched)"
+                  class="ng-dirty">
+                  <span class="error" *ngIf="formValid['registersName'].errors['required']"> This element is required,
+                    please fill.</span>
+                  <span *ngIf="formValid['registersName'].errors['minlength']">
+                    <span class="error"> Full name length must be between 3 and 30 character.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="d-flex justify-content-end align-items-center pt30">
+                <div class="form-check form-switch">
+                  <label class="labelactive">Active</label>
+                  <input class="form-check-input" [(ngModel)]="isStatus" name="isStatus" type="checkbox" role="switch"
+                    (change)="chooseStatus()" [ngModelOptions]="{standalone: true}">
+                </div>
+                <!-- <div class="edit-btn" [hidden]="!branchId">
+                <button class="btn" (click)="toEdit()"><i class="fa-solid fa-pen"></i> </button>
+              </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Branch & Location * </h3>
+        </div>
+        <div class="card-form ">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label> Location " City " </label>
+                <ng-select name="city" id="city" placeholder="Select" [items]="locations" formControlName="city"
+                  required (change)="chooseCity($event)">
+                  <ng-template ng-label-tmp let-item="item">
+                    {{item}}
+                  </ng-template>
+                </ng-select>
+                <div
+                  *ngIf="submitted && formValid['city'].invalid  && (formValid['city'].dirty || formValid['city'].touched)"
+                  class="ng-dirty">
+                  <span class="error" *ngIf="formValid['city'].errors['required']"> This element is required,
+                    please fill.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group  ">
+                <label> Branch</label>
+                <ng-select name="branchId" id="branchId" placeholder="Select" [items]="branches" bindLabel="branchName"
+                  bindValue="branchId" formControlName="branchId" required>
+                </ng-select>
+                <div
+                  *ngIf="submitted && formValid['branchId'].invalid  && (formValid['branchId'].dirty || formValid['branchId'].touched)"
+                  class="ng-dirty">
+                  <span *ngIf="formValid['branchId'].errors">
+                  </span>
+                  <span class="error" *ngIf="formValid['branchId'].errors['required']"> This element is required,
+                    please fill.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Collection Orders * </h3>
+        </div>
+        <div class="card-form overflow-hidden position-relative">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-check form-check-inline" *ngFor="let item of collectioOrders">
+                <input class="form-check-input" type="checkbox" [value]="item.id" id="{{item.id}}"
+                  (change)="selectCollection(item.id)" [checked]="collectionAry.includes(item.id)">
+                <label class="form-check-label" for="{{item.id}}">
+                  {{item.name[0].lookupName}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Employees</h3>
+        </div>
+        <div class="card-form overflow-hidden1 position-relative">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-3">
+                  <p>Role Name</p>
+                </div>
+                <div class="col-md-3">
+                  <p>User</p>
+                </div>
+              </div>
+              <hr>
+            </div>
+            <div class="col-md-12" formArrayName="registerEmployees"
+              *ngFor="let item of registerEmployees.controls; let i=index">
+              <div class="row" [formGroupName]="i">
+                <div class="col-md-3">
+                  <div *ngIf="i == 0">
+                    <h6> Register Cashier </h6>
+                  </div>
+                  <div class="form-group" [hidden]="i == 0">
+                    <ng-select placeholder="Select" [items]="roles" required bindLabel="name" bindValue="roleId"
+                      formControlName="roleId">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <ng-select placeholder="Select" [items]="users" required bindLabel="fullName" bindValue="userId"
+                      formControlName="userId">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div [hidden]="i == 0">
+                    <button class="btn btnremove-emp" (click)="Remove(i)"><i class="fa-solid fa-trash-can"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="text-end">
+                <button class="btn btn-addemp" (click)="pushRegisterEmployees()">Add Employee </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="page-title">
+          <h3> Setup </h3>
+        </div>
+        <div class="card-form overflow-hidden1 position-relative">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="cash" formControlName="cash">
+                <label class="form-check-label" for="cash"> Cash </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <ng-select placeholder="Select Currency" [multiple]="true" [items]="curruncys" bindLabel="name"
+                  bindValue="id" required formControlName="registerCurrencies">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="onAccount" formControlName="onAccount">
+                <label class="form-check-label" for="onAccount">
+                  On Account
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="cheque" value="cheque" formControlName="cheque">
+                <label class="form-check-label" for="cheque">Cheque</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="sparePartsSales" value="sparePartsSales">
+                <label class="form-check-label" for="sparePartsSales">Spare Parts Sales Order</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="onAccount" formControlName="onAccount">
+                <label class="form-check-label" for="onAccount">
+                  Cards
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="cheque" value="cheque" formControlName="cheque">
+                <label class="form-check-label" for="cheque">Visa Card</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="sparePartsSales" value="sparePartsSales">
+                <label class="form-check-label" for="sparePartsSales">Mastercard</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="sparePartsSales" value="sparePartsSales">
+                <label class="form-check-label" for="sparePartsSales">American Express</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h5> Register Session * </h5>
+              <hr>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>Number of Sessions Per Day *</label>
+                <input formControlName="numberOfSessionsPerDay" name="numberOfSessionsPerDay" type="text"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>Number Of Sessions Per Week *</label>
+                <input formControlName="numberOfSessionsPerWeek" name="numberOfSessionsPerWeek" type="text"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h5> Allowed Sessions time </h5>
+              <hr>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>From</label>
+                <input formControlName="numberOfSessionsPerDay" name="numberOfSessionsPerDay" type="time"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>To</label>
+                <input formControlName="numberOfSessionsPerWeek" name="numberOfSessionsPerWeek" type="time"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h5> Opening without Settlement </h5>
+              <hr>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="cash" formControlName="cash">
+                <label class="form-check-label" for="cash"> Allow Open a new session without Settlement. </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h5> Number of Opening Without settlement </h5>
+              <hr>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>Per day</label>
+                <input formControlName="numberOfSessionsPerDay" name="numberOfSessionsPerDay" type="text"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group ">
+                <label>Per week</label>
+                <input formControlName="numberOfSessionsPerWeek" name="numberOfSessionsPerWeek" type="text"
+                  class="form-control" placeholder="Number of sessions" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h5> Cash Deposit * </h5>
+              <hr>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                  value="option1">
+                <label class="form-check-label" for="inlineRadio1">1</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="btns-group">
+          <button type="button" class="btn btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-save"> {{isEdit ? 'Add' : 'Save'}} </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
