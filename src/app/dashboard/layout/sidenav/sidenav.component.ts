@@ -155,6 +155,16 @@ export class SidenavComponent implements OnInit {
         url: '/mainFund-allocation',
         title: 'Allocation',
         type: 38,
+      },
+      {
+        Title: 'Register Settlements',
+        IsActive: false,
+        IsSelect: false,
+        Icon: 'assets/images/navicon/pettycash.png',
+        Icon2: 'assets/images/navicon/pettycash2.png',
+        url: '/register-settlements',
+        title: 'Register Settlements',
+        type: 38,
       }
 
       // {

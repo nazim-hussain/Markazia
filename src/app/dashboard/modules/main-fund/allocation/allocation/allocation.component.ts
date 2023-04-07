@@ -28,8 +28,9 @@ export class mainfundAllocationComponent {
   handleSearchInput(event) {
     console.log(event.target.value);
     const value = event.target.value;
+    this.searchText = value;
     if(value.length > 2)
-    this.getAllocationList(value)
+    this.getAllocationList()
     if (!value)
       this.getAllocationList()
   }
@@ -48,8 +49,9 @@ export class mainfundAllocationComponent {
   /**
    * get list of allocation orders
    */
-  getAllocationList(search?:string) {
-    this._allocationService.getAllocation(this.pageNo,search,this.sort).subscribe((response) => {
+  getAllocationList() {
+    debugger;
+    this._allocationService.getAllocation(this.pageNo,this.searchText,this.sort).subscribe((response) => {
       console.log(response, 'list of  allocation response');
       if (response) {
         this.AllocationOrder = response?.data;
@@ -71,7 +73,7 @@ export class mainfundAllocationComponent {
   }
 
   // Sorting Functions
-  sortByBranch() {
+  sortByOrder() {
     if (this.sort == 3) {
       this.sort = 1;
     } else {
@@ -79,7 +81,7 @@ export class mainfundAllocationComponent {
     }
     this.getAllocationList();
   }
-  sortByRegisterNo() {
+  sortByDate() {
     if (this.sort == 5) {
       this.sort = 1;
     } else {
@@ -87,7 +89,7 @@ export class mainfundAllocationComponent {
     }
         this.getAllocationList();
   }
-  sortByDate() {
+  sortByDeposit() {
     if (this.sort == 7) {
       this.sort = 1;
     } else {
@@ -95,7 +97,7 @@ export class mainfundAllocationComponent {
     }
         this.getAllocationList();
   }
-  sortByCashier() {
+  sortByGrandAmount() {
     if (this.sort == 9) {
       this.sort = 1;
     } else {
@@ -103,7 +105,7 @@ export class mainfundAllocationComponent {
     }
         this.getAllocationList();
   }
-  sortByAmount() {
+  sortByCreated() {
     if (this.sort == 11) {
       this.sort = 1;
     } else {

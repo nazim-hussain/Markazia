@@ -16,6 +16,10 @@ import { mainfundAllocationComponent } from './allocation.component';
     ViewImageComponent,
     DespositChequeComponent,
   ],
-  imports: [CommonModule, allocationRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    allocationRoutingModule,
+    SharedModule
+  ],
 })
 export class allocationModule {}

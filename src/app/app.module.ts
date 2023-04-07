@@ -17,6 +17,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { AgmCoreModule } from '@agm/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CharacterDirective } from './services/character.directive';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [AppComponent, CharacterDirective],
   imports: [
@@ -33,6 +35,7 @@ import { CharacterDirective } from './services/character.directive';
     PaginationModule,
     NgSelectModule,
     NgbModule,
+    SharedModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAAQ7GPIxJs5PTBccmO9OZwBUy464p59bY',
       libraries: ['places'],

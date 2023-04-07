@@ -1,8 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@ng-select/ng-select/themes/default.theme.css";
-@import "~bootstrap/dist/css/bootstrap.css";
+/*@import "~bootstrap/dist/css/bootstrap.css";*/
 @import "./global.scss";
-
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700&display=swap");
 
 body {
@@ -243,6 +242,7 @@ input.form-control:focus {
   box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.05);
   // box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  overflow:hidden;
   .table {
     margin: 0px;
   }
@@ -735,7 +735,50 @@ input.form-control:focus {
     color: #dc3545;
   }
 }
+.page-layout{
+    padding:35px 20px 0px 40px;
+}
+.heading-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1B212D;
+}
+.ses-input {
+  input {
+    height: 48px;
+  }
 
+  select {
+    height: 48px;
+  }
+}
+.total-records {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: #929eae;
+  margin: 0px;
+  padding: 10px 0px;
+}
+.status-tag {
+  display: flex;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  width: 95px;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 0px;
+}
+.dot-details {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 2px solid #1B212D;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 @media (max-width: 768px) {
   .card-login {
     padding: 30px;
@@ -749,3 +792,10 @@ input.form-control:focus {
   }
 }
 // =====  end auth pages -   =====
+
+
+/* Importing Bootstrap SCSS file. */
+@import "./node_modules/bootstrap/scss/bootstrap";
+
+/* Importing Datepicker SCSS file. */
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";

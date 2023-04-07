@@ -88,7 +88,13 @@ const routes: Routes = [
             './modules/main-fund/allocation/allocation/allocation.module'
           ).then((m) => m.allocationModule),
       },
-
+      {
+        path: 'register-settlements',
+        loadChildren: () =>
+          import(
+            './modules/main-fund/register-settlements/register-settlements.module')
+            .then((m) => m.RegisterSettlementsModule)
+      },
       // ========= Treasury  ========================================================
       {
         path: 'allocation',

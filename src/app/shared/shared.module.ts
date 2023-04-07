@@ -26,6 +26,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { PreventMinusDirective } from './directive/prevent-minus.directive';
 import { CheckAmountDirective } from './directive/check-amount.directive';
 import { NoIpAddressComponent } from './components/no-ip-address/no-ip-address.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -56,13 +57,14 @@ import { NoIpAddressComponent } from './components/no-ip-address/no-ip-address.c
     PaginationModule,
     NgSelectModule,
     NgbModule,
-
+    BsDatepickerModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAAQ7GPIxJs5PTBccmO9OZwBUy464p59bY',
       libraries: ['places'],
     }),
   ],
   exports: [
+    BsDatepickerModule,
     Ng2TelInputModule,
     HttpClientModule,
     ReactiveFormsModule,
