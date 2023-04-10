@@ -50,7 +50,6 @@ export class mainfundAllocationComponent {
    * get list of allocation orders
    */
   getAllocationList() {
-    debugger;
     this._allocationService.getAllocation(this.pageNo,this.searchText,this.sort).subscribe((response) => {
       console.log(response, 'list of  allocation response');
       if (response) {

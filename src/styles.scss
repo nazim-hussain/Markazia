@@ -747,10 +747,6 @@ input.form-control:focus {
   input {
     height: 48px;
   }
-
-  select {
-    height: 48px;
-  }
 }
 .total-records {
   font-weight: 500;
@@ -778,6 +774,9 @@ input.form-control:focus {
   display:flex;
   align-items:center;
   justify-content:center;
+}
+.bs-datepicker-head {
+  background-color: #dc3545 !important;
 }
 @media (max-width: 768px) {
   .card-login {

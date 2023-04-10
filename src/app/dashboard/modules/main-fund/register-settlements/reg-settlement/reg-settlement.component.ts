@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { RegisterSettlementService } from '../register-settlements-service/register-settlement.service';
 import * as _ from 'underscore';
+import { TransactionHistoryService } from '../../../treasury/transactions-history/transaction-history-services/transaction-history.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-reg-settlement',
   templateUrl: './reg-settlement.component.html',
@@ -8,25 +11,93 @@ import * as _ from 'underscore';
 })
 export class RegSettlementComponent {
   searchText: string = '';
+  filterParams: string = undefined;
   sort: number = 1;
   totalRecords: number = 0;
   pageNo: number = 0;
+  pageSize: number = 6;
   pagin: number;
   pages: any[] = [];
-  sessionList:any[] = [];
-  constructor(private _registerSettlementService: RegisterSettlementService) {
+  sessionList: any[] = [];
+  branchesList: any[] = [];
+  employeesList: any[] = [];
+  statusList: any[] = [];
+  sessionFilterForm: FormGroup;
+  constructor(private _registerSettlementService: RegisterSettlementService,
+    private _transactionHistoryService: TransactionHistoryService, private fb: FormBuilder, public datepipe: DatePipe) {
 
   }
-  ngOnInit() {
-    this.getAllSessions()
+  initFilterForm() {
+    this.sessionFilterForm = this.fb.group({
+      register: [''],
+      branch: [null],
+      createdBy: [null],
+      date: [''],
+      status: [null],
+    })
   }
-  getAllSessions() {
-    this._registerSettlementService.getAllSessions(this.pageNo, '',this.sort).subscribe(response => {
+  ngOnInit() {
+    this.getAllSessions(this.filterParams);
+    this.getBaranches();
+    this.getEmployees();
+    this.getStatusList();
+    this.initFilterForm();
+    this.sessionFilterForm.valueChanges.subscribe(value => {
+      let dateObj = { fromDate: '', toDate: '' };
+      let formValues;
+      if (value['date']) {
+        dateObj['fromDate'] = this.datepipe.transform(value['date'][0], 'yyyy-MM-dd');
+        dateObj['toDate'] = this.datepipe.transform(value['date'][1], 'yyyy-MM-dd');;
+      }
+      formValues = { ...value, ...dateObj };
+      delete formValues['date'];
+      let isEmpty = true;
+      for (let obj in value) {
+        if (value[obj]) {
+          this.pageNo = 0;
+          isEmpty = false;
+        }
+        if (formValues[obj] == null) {
+          formValues[obj] = ''
+        }
+      }
+      this.filterParams = '?' + new URLSearchParams(formValues).toString();
+      if (isEmpty) {
+        this.filterParams = undefined;
+        this.pageNo = 0;
+      }
+      this.getAllSessions(this.filterParams)
+    })
+  }
+  resetDate() {
+    this.sessionFilterForm.controls['date'].setValue('');
+  }
+  resetRegisterNo() {
+    this.sessionFilterForm.controls['register'].setValue('');
+  }
+  getAllSessions(filterParams = this.filterParams) {
+    let defaultParams = `pageNo=${this.pageNo}&sort=${this.sort}&pageSize=${this.pageSize}`
+    this._registerSettlementService.getAllSessions((filterParams && filterParams + `&${defaultParams}`) || (`?${defaultParams}`)).subscribe(response => {
       this.sessionList = response?.data;
       this.totalRecords = response?.totalRecordCount;
       this.pagin = Math.ceil(this.totalRecords / 6);
       this.pages = _.range(this.pagin);
-      console.log(response);
+    })
+  }
+  getBaranches() {
+    this._transactionHistoryService.GetBranches().subscribe(response => {
+      this.branchesList = response.data;
+      console.log(this.branchesList);
+    })
+  }
+  getEmployees() {
+    this._transactionHistoryService.GetEmployees().subscribe(response => {
+      this.employeesList = response.data;
+    })
+  }
+  getStatusList() {
+    this._registerSettlementService.getStatusList().subscribe(response => {
+      this.statusList = response.data;
     })
   }
   // Sorting Functions

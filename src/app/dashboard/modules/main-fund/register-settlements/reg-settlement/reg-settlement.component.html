@@ -1,55 +1,43 @@
-<div class="page-layout mt-5">
+<div class="page-layout">
   <h3 class="heading-text">Sessions List</h3>
-  <div class="row">
-    <div class="col-md-3">
-      <div class="input-group search-box">
-        <button class="btn" type="button">
-          <i class="fa-solid fa-search"></i>
-        </button>
-        <input type="text" class="form-control" placeholder="Register Name or No." />
+  <form [formGroup]="sessionFilterForm">
+    <div class="row align-items-stretch">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="input-group search-box h-100">
+          <button class="btn" type="button">
+            <i class="fa-solid fa-search"></i>
+          </button>
+          <input type="text" class="form-control" formControlName="register" placeholder="Register Name or No." />
+          <button *ngIf="sessionFilterForm.controls['register'].value !==''" class="btn" type="button" (click)="resetRegisterNo()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <ng-select class="flex-grow-1 mt-3 mt-sm-0" formControlName="branch" placeholder="Branch Name" [items]="branchesList" bindLabel="branchName" bindValue="branchId">
+          </ng-select>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <ng-select class="flex-grow-1 mt-3 mt-md-0" formControlName="createdBy" placeholder="Employee" [items]="employeesList" bindLabel="fullName" bindValue="userId">
+          </ng-select>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 position-relative">
+        <i *ngIf="sessionFilterForm.controls['date'].value.length" class="fa-solid fa-times" style="position:absolute;top:15px;right:30px;cursor:pointer" (click)="resetDate()"></i>
+        <input type="text"
+               style="height:46px"
+               formControlName="date"
+               placeholder="Select Date"
+               class="form-control mt-3 mt-lg-0"
+               bsDaterangepicker
+               [bsConfig]="{ containerClass: 'theme-red',isAnimated: true,showClearButton: true}"
+               placement="left">
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
+        <ng-select class="flex-grow-1" formControlName="status" placeholder="Status" [items]="statusList" bindLabel="description" bindValue="id">
+        </ng-select>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="input-group search-box">
-        <button class="btn" type="button">
-          <i class="fa-solid fa-search"></i>
-        </button>
-        <select class="form-control">
-          <option selected disabled>Branch Name</option>
-          <option>Branch One</option>
-          <option>Branch Two</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="input-group search-box">
-        <button class="btn" type="button">
-          <i class="fa-solid fa-search"></i>
-        </button>
-        <select class="form-control">
-          <option selected disabled>Employee</option>
-          <option>Employee 1</option>
-          <option>Employee 2</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-3 ses-input">
-      <input type="text"
-             placeholder="Select Date"
-             class="form-control"
-             bsDaterangepicker
-             [bsConfig]="{ containerClass: 'theme-red',isAnimated: true }"
-             placement="left"
-             >
-    </div>
-    <div class="col-md-2 mt-4 ses-input">
-      <select class="form-control">
-        <option selected disabled>Status</option>
-        <option>Active</option>
-        <option>Pending</option>
-      </select>
-    </div>
-  </div>
+  </form>
   <div class="d-flex justify-content-end">
     <p class="total-records">Total No. {{ totalRecords }}</p>
   </div>
