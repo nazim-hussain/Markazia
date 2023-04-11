@@ -4,6 +4,8 @@ import * as _ from 'underscore';
 import { TransactionHistoryService } from '../../../treasury/transactions-history/transaction-history-services/transaction-history.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { Status } from '../../../../../shared/enums/enum';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-reg-settlement',
   templateUrl: './reg-settlement.component.html',
@@ -23,9 +25,12 @@ export class RegSettlementComponent {
   employeesList: any[] = [];
   statusList: any[] = [];
   sessionFilterForm: FormGroup;
+  forceCloseForm: FormGroup;
+  sessionDetails: any;
+  status = Status;
   constructor(private _registerSettlementService: RegisterSettlementService,
-    private _transactionHistoryService: TransactionHistoryService, private fb: FormBuilder, public datepipe: DatePipe) {
-
+    private _transactionHistoryService: TransactionHistoryService,
+    private fb: FormBuilder, public datepipe: DatePipe, private modalService: NgbModal) {
   }
   initFilterForm() {
     this.sessionFilterForm = this.fb.group({
@@ -36,12 +41,18 @@ export class RegSettlementComponent {
       status: [null],
     })
   }
+  initForcCloseForm() {
+    this.forceCloseForm = this.fb.group({
+      value:['']
+    })
+  }
   ngOnInit() {
     this.getAllSessions(this.filterParams);
     this.getBaranches();
     this.getEmployees();
     this.getStatusList();
     this.initFilterForm();
+    this.initForcCloseForm();
     this.sessionFilterForm.valueChanges.subscribe(value => {
       let dateObj = { fromDate: '', toDate: '' };
       let formValues;
@@ -69,6 +80,12 @@ export class RegSettlementComponent {
       this.getAllSessions(this.filterParams)
     })
   }
+  openModal(content, item) {
+    this.sessionDetails = {};
+    this.sessionDetails = item;
+    console.log(this.sessionDetails);
+    this.modalService.open(content, { centered: true, size:'lg' });
+  }
   resetDate() {
     this.sessionFilterForm.controls['date'].setValue('');
   }
@@ -79,6 +96,7 @@ export class RegSettlementComponent {
     let defaultParams = `pageNo=${this.pageNo}&sort=${this.sort}&pageSize=${this.pageSize}`
     this._registerSettlementService.getAllSessions((filterParams && filterParams + `&${defaultParams}`) || (`?${defaultParams}`)).subscribe(response => {
       this.sessionList = response?.data;
+      console.log(this.sessionList);
       this.totalRecords = response?.totalRecordCount;
       this.pagin = Math.ceil(this.totalRecords / 6);
       this.pages = _.range(this.pagin);

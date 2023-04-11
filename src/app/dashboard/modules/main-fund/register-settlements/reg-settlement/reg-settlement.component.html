@@ -14,12 +14,12 @@
         </div>
       </div>
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <ng-select class="flex-grow-1 mt-3 mt-sm-0" formControlName="branch" placeholder="Branch Name" [items]="branchesList" bindLabel="branchName" bindValue="branchId">
-          </ng-select>
+        <ng-select class="flex-grow-1 mt-3 mt-sm-0" formControlName="branch" placeholder="Branch Name" [items]="branchesList" bindLabel="branchName" bindValue="branchId">
+        </ng-select>
       </div>
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <ng-select class="flex-grow-1 mt-3 mt-md-0" formControlName="createdBy" placeholder="Employee" [items]="employeesList" bindLabel="fullName" bindValue="userId">
-          </ng-select>
+        <ng-select class="flex-grow-1 mt-3 mt-md-0" formControlName="createdBy" placeholder="Employee" [items]="employeesList" bindLabel="fullName" bindValue="userId">
+        </ng-select>
       </div>
       <div class="col-12 col-sm-6 col-md-4 col-lg-3 position-relative">
         <i *ngIf="sessionFilterForm.controls['date'].value.length" class="fa-solid fa-times" style="position:absolute;top:15px;right:30px;cursor:pointer" (click)="resetDate()"></i>
@@ -44,7 +44,7 @@
   <!-- table -->
   <div class="row">
     <div class="col-md-12" *ngIf="sessionList; let sessionList; else: loading">
-      <div class="card-table mt-2">
+      <div class="card-table mt-2 register-sessions-table">
         <div class="table-responsive">
           <table class="table">
             <thead>
@@ -114,9 +114,18 @@
                   </div>
                 </td>
 
-                <td style="cursor: pointer">
-                  <div class="dot-details">
-                    <i class="fas fa-ellipsis-h"></i>
+                <td>
+                  <div class="btn-group remove-caret-dropdown" dropdown>
+                    <div class="dot-details cursor-pointer dropdown-toggle" dropdownToggle aria-controls="dropdown-basic">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right custom-session-dd"
+                        role="menu" aria-labelledby="button-alignment">
+                      <li *ngIf="item.status == status.Closed" role="menuitem"><button type="button" class="dropdown-item">Settle</button></li>
+                      <li role="menuitem"><button type="button" class="dropdown-item" (click)="openModal(content,item)">Force Close</button></li>
+                      <li role="menuitem"><button type="button" class="dropdown-item">View Register</button></li>
+                      <li role="menuitem"><button type="button" class="dropdown-item">View Session</button></li>
+                    </ul>
                   </div>
                 </td>
               </tr>
@@ -156,5 +165,67 @@
       </ul>
     </div>
   </div>
-
 </div>
+
+<!--Modal Popup-->
+<ng-template #content let-modal>
+  <div class="fc-modal p-4">
+    <div class="modal-header p-0">
+      <h4 class="modal-title fw-bolder pb-3" ngbAutofocus>Force Close</h4>
+    </div>
+    <div class="modal-body p-0">
+      <div class="body-layout mt-3">
+        <div class="d-flex flex-column">
+          <h6 class="dark-gray fw-bolder">Branch Name</h6>
+          <h6 class="light-gray fw-bolder">{{sessionDetails?.branch?.branchName}}</h6>
+        </div>
+        <div class="d-flex flex-column">
+          <h6 class="dark-gray fw-bolder">Register Name</h6>
+          <h6 class="light-gray fw-bolder">{{sessionDetails?.register?.registersName}}</h6>
+        </div>
+        <div class="d-flex flex-column">
+          <h6 class="dark-gray fw-bolder">Register No</h6>
+          <h6 class="light-gray fw-bolder">{{sessionDetails?.register?.registerId}}</h6>
+        </div>
+        <div class="d-flex flex-column">
+          <h6 class="dark-gray fw-bolder">Session No</h6>
+          <h6 class="light-gray fw-bolder">{{sessionDetails?.registerSessionId}}</h6>
+        </div>
+        <div class="d-flex flex-column">
+          <h6 class="dark-gray fw-bolder">Employee</h6>
+          <h6 class="light-gray fw-bolder">{{sessionDetails?.createdBy?.fullName}}</h6>
+        </div>
+      </div>
+      <h5 class="dark-gray fw-bolder my-4">You are about to force close the following register</h5>
+      <form [formGroup]="forceCloseForm">
+        <!--{{forceCloseForm.value | json}}-->
+        <div class="row my-5">
+          <div class="col-md-4">
+            <div class="form-check form-check-inline">
+              <input type="radio" id="close" formControlName="value" value="1" class="form-check-input" />
+              <label class="form-check-label" for="close">Close Register for all day </label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-check form-check-inline">
+              <input type="radio" id="session" formControlName="value" value="2" class="form-check-input" />
+              <label class="form-check-label" for="session">Close Session</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-check form-check-inline">
+              <input type="radio" id="register" formControlName="value" value="3" class="form-check-input" />
+              <label class="form-check-label" for="register">Deactivate Register</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer p-0">
+      <div class="btns-group">
+        <button type="button" class="btn btn-cancel" (click)="modal.close('Save click')">Cancel</button>
+        <button type="button" class="btn btn-save">Submit</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -27,6 +27,7 @@ import { PreventMinusDirective } from './directive/prevent-minus.directive';
 import { CheckAmountDirective } from './directive/check-amount.directive';
 import { NoIpAddressComponent } from './components/no-ip-address/no-ip-address.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   declarations: [
@@ -58,12 +59,14 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgSelectModule,
     NgbModule,
     BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAAQ7GPIxJs5PTBccmO9OZwBUy464p59bY',
       libraries: ['places'],
     }),
   ],
   exports: [
+    BsDropdownModule,
     BsDatepickerModule,
     Ng2TelInputModule,
     HttpClientModule,
