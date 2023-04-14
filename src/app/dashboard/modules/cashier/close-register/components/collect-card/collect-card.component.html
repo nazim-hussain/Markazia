@@ -2,12 +2,14 @@
   <div class="col-md-6">
 
     <div class="input-group search-box">
-      <button class="btn" type="button" id="button-addon1" (click)="removeSearch()"><i
-          class="fa-solid fa-search"></i></button>
+      <button class="btn" type="button" id="button-addon1" (click)="removeSearch()">
+        <i class="fa-solid fa-search"></i>
+      </button>
       <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText"
-        (keyup)="searchData($event)">
-      <button class="btn" type="button" id="button-addon1" [hidden]="searchText.length == 0" (click)="removeSearch()"><i
-          class="fa-solid fa-xmark"></i></button>
+             (keyup)="searchData($event)">
+      <button class="btn" type="button" id="button-addon1" [hidden]="searchText.length == 0" (click)="removeSearch()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
 
   </div>
@@ -43,20 +45,30 @@
                   <td>
                     <!-- {{item.performedAction}} -->
 
-                    <button class="btn btn-undo" (click)="ReverseActionsOnCard(item)" *ngIf="item.actionTaken == true">
-                      Undo <img src="assets/images/undo.png" alt=""></button>
+                    <button class="btn btn-undo"
+                            (click)="ReverseActionsOnCard(item)"
+                            *ngIf="item.actionTaken == true">
+                      Undo
+                      <img src="assets/images/undo.png" alt="">
+                    </button>
 
-                    <button class="btn btn-right" (click)="ActionsOnCard(item,'right')"
-                      *ngIf="item.actionTaken == false || item.performedAction == 'right' || item.performedAction == 'edit'"
-                      [disabled]="item.performedAction == 'right' ? true : false || item.performedAction == 'edit' ? true : false">
-                      <i class="fa-regular fa-circle-check"></i> </button>
-                    <button class="btn btn-xmark" (click)="ActionsOnCard(item,'wrong')"
-                      *ngIf="item.actionTaken == false || item.performedAction == 'wrong'"
-                      [disabled]="item.performedAction == 'wrong' ? true : false">
-                      <i class="fa-regular fa-circle-xmark"></i> </button>
-                    <button class="btn btn-edit" *ngIf="item.actionTaken == false || item.performedAction == 'edit'"
-                      [disabled]="item.performedAction == 'edit' ? true : false" (click)="openModalEdit(item)"> <i
-                        class="fa-solid fa-pen"></i>
+                    <button class="btn btn-right"
+                            (click)="ActionsOnCard(item,'right')"
+                            *ngIf="item.actionTaken == false || item.performedAction == 'right' || item.performedAction == 'edit'"
+                            [disabled]="item.performedAction == 'right' ? true : false || item.performedAction == 'edit' ? true : false">
+                      <i class="fa-regular fa-circle-check"></i>
+                    </button>
+                    <button class="btn btn-xmark"
+                            (click)="ActionsOnCard(item,'wrong')"
+                            *ngIf="item.actionTaken == false || item.performedAction == 'wrong'"
+                            [disabled]="item.performedAction == 'wrong' ? true : false">
+                      <i class="fa-regular fa-circle-xmark"></i>
+                    </button>
+                    <button class="btn btn-edit"
+                            *ngIf="item.actionTaken == false || item.performedAction == 'edit'"
+                            [disabled]="item.performedAction == 'edit' ? true : false"
+                            (click)="openModalEdit(item)">
+                      <i class="fa-solid fa-pen"></i>
                     </button>
                   </td>
                 </tr>
@@ -79,9 +91,14 @@
   </div>
 
   <div class="col-md-6" [hidden]="collectedData?.length > 7">
-    <h6 class="showing"> Showing <span> {{( pageNo + 1 ) * 6 - 5}} - {{ collectedData?.length == 6 ? (( pageNo + 1 ) * 6
+    <h6 class="showing">
+      Showing <span>
+        {{( pageNo + 1 ) * 6 - 5}} - {{
+ collectedData?.length == 6 ? (( pageNo + 1 ) * 6
         ):
-        totalRecordsCount }} </span>
+        totalRecordsCount
+        }}
+      </span>
       from <span> {{totalRecordsCount}} </span> data
     </h6>
   </div>
@@ -89,7 +106,7 @@
     <ul class="pagination">
       <li class="page-item" *ngFor="let page of pages">
         <button class="page-link" (click)="setPage(page)" [ngClass]="{ active: pageNo === page }"
-          [disabled]="pageNo === page">
+                [disabled]="pageNo === page">
           {{ page + 1 }}
         </button>
       </li>

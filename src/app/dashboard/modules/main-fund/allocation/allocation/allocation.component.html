@@ -87,7 +87,7 @@
       <button class="btn" type="button" id="button-addon1" (click)="removeSearch()">
         <i class="fa-solid fa-search"></i>
       </button>
-      <input type="text" class="form-control" placeholder="Bank or order no. grand amount" (input)="handleSearchInput($event)" />
+      <input type="text" class="form-control" placeholder="Bank or order no. grand amount" [(ngModel)]="searchText" (input)="handleSearchInput($event)" />
       <button class="btn" type="button" id="button-addon1" [hidden]="searchText.length == 0" (click)="removeSearch()">
         <i class="fa-solid fa-xmark"></i>
       </button>

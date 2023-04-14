@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="input-group search-box">
+      <button class="btn" type="button" id="button-addon1" (click)="removeSearch()">
+        <i class="fa-solid fa-search"></i>
+      </button>
+      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText"
+             (keyup)="searchData($event)">
+      <button class="btn" type="button" id="button-addon1" [hidden]="searchText.length == 0" (click)="removeSearch()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+  </div>
+  <div class="col-md-6">
+    <div class="top-details justify-content-end pt-3">
+      <p> <span> No. Of Transactions {{totalRecordCount}}</span> </p>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card-table mt-3">
+      <div class="row">
+        <div class="col-md-12" *ngIf="sessionCheques; let sessionCheques; else: loading ">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr class="py-2">
+                  <th scope="col"> Customer </th>
+                  <th scope="col"> Cheque No </th>
+                  <th scope="col"> Amount </th>
+                  <th scope="col"> Date</th>
+                  <th scope="col"> Bank </th>
+                  <th scope="col"> Action </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of sessionCheques" [class.highlight-tr]="item?.wrongActionInClosing">
+                  <td> {{ item?.chequeCustomer}}</td>
+                  <td> {{item?.chequeNo}} </td>
+                  <td> {{ item?.chequeCollectionJod}} JD</td>
+                  <td> {{ item.chequeDate | date :'shortDate' }}</td>
+                  <td> {{ item.bank[0]?.lookupName }}</td>
+                  <td>
+                    <ng-container *ngIf="item.settleActionTaken;else elseBlock">
+                      <button class="btn btn-undo">
+                        Undo <img src="assets/images/undo.png" alt="">
+                      </button>
+
+                      <button class="btn btn-right"
+                              *ngIf="item.settleActionType == 'right'"
+                              [disabled]="item.settleActionType == 'right'">
+                        <i class="fa-regular fa-circle-check"></i>
+                      </button>
+                      <button class="btn btn-xmark"
+                              *ngIf="item.settleActionType == 'wrong'"
+                              [disabled]="item.settleActionType == 'wrong'">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                      </button>
+                      <button class="btn btn-edit"
+                              *ngIf="item.settleActionType == 'edit'"
+                              [disabled]="item.settleActionType == 'edit'">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                    </ng-container>
+
+                    <ng-template #elseBlock>
+                      <button class="btn btn-right">
+                        <i class="fa-regular fa-circle-check"></i>
+                      </button>
+                      <button class="btn btn-xmark">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                      </button>
+                      <button class="btn btn-edit">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                    </ng-template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="sessionCheques?.length == 0">
+            <app-not-found></app-not-found>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <ng-template #loading>
+            <div>
+              <app-loading></app-loading>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6" [hidden]="sessionCheques?.length > 7">
+    <h6 class="showing">
+      Showing <span>
+        {{( pageNo + 1 ) * 6 - 5}} - {{
+ sessionCheques?.length == 6 ? (( pageNo + 1 ) * 6
+        ):
+        totalRecordCount
+        }}
+      </span>
+      from <span> {{totalRecordCount}} </span> data
+    </h6>
+  </div>
+  <div class="col-md-6" [hidden]="totalRecordCount < 7">
+    <ul class="pagination">
+      <li class="page-item" *ngFor="let page of pages">
+        <button class="page-link" (click)="setPage(page)" [ngClass]="{ active: pageNo === page }"
+                [disabled]="pageNo === page">
+          {{ page + 1 }}
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

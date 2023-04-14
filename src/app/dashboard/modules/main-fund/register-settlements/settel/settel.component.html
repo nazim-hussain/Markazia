@@ -1,0 +1,235 @@
+<div class="card-page">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-collect card-with-details">
+        <div class="d-flex align-items-center justify-content-between">
+          <h6 class="card-inner-heading">Settle</h6>
+          <div class="d-flex flex-column">
+            <p class="m-0">Closing Date & Time</p>
+            <span>{{settlementDetails?.createdAt | date:'short'}}</span>
+          </div>
+        </div>
+        <hr />
+        <div class="d-flex mt-4 justify-content-between flex-wrap gap-3">
+          <div class="d-flex flex-column">
+            <h6 class="dark-gray">Branch Name</h6>
+            <h6 class="light-gray">{{settlementDetails?.branch?.branchName}}</h6>
+          </div>
+          <div class="d-flex flex-column">
+            <h6 class="dark-gray">Register Name</h6>
+            <h6 class="light-gray">{{settlementDetails?.register?.registersName}}</h6>
+          </div>
+          <div class="d-flex flex-column">
+            <h6 class="dark-gray">Register No</h6>
+            <h6 class="light-gray">{{settlementDetails?.register?.registerId}}</h6>
+          </div>
+          <div class="d-flex flex-column">
+            <h6 class="dark-gray">Session No</h6>
+            <h6 class="light-gray">{{settlementDetails?.registerSessionId}}</h6>
+          </div>
+          <div class="d-flex flex-column">
+            <h6 class="dark-gray">Employee</h6>
+            <h6 class="light-gray">{{settlementDetails?.createdBy?.fullName}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3 class="heading-text mb-3">Register Amounts</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tab-nav d-flex flex-wrap">
+          <button class="btn" (click)="chooseTab(1)" [class.active]="selected == 1">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="imag"><img src="assets/images/wallet.png" alt=""></div>
+              <div class="info">
+                <p> Total Cash </p>
+                <h5> {{settlementDetails?.registerAmounts?.totalCash}} JD </h5>
+              </div>
+            </div>
+          </button>
+          <button class="btn" (click)="chooseTab(2)" [class.active]="selected == 2">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="imag"><img src="assets/images/cheque.png" alt=""></div>
+              <div class="info">
+                <p> Total Cheque </p>
+                <h5>{{settlementDetails?.registerAmounts?.totalCheques}} JD </h5>
+              </div>
+            </div>
+          </button>
+          <button class="btn" (click)="chooseTab(3)" [class.active]="selected == 3">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="imag"><img src="assets/images/card.png" alt=""></div>
+              <div class="info">
+                <p> Total Card </p>
+                <h5> {{settlementDetails?.registerAmounts?.totalCards}} JD </h5>
+              </div>
+            </div>
+          </button>
+          <button class="btn">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="imag"><img src="assets/images/wallet.png" alt=""></div>
+              <div class="info">
+                <p> Deposited Cash </p>
+                <h5> {{settlementDetails?.registerAmounts?.depositedCash}} JD </h5>
+              </div>
+            </div>
+          </button>
+          <button class="btn">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="imag"><img src="assets/images/card.png" alt=""></div>
+              <div class="info">
+                <p> Deposited Card </p>
+                <h5> {{settlementDetails?.registerAmounts?.depositedCards}} JD </h5>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tab-content">
+              <div class="tab-item" [hidden]="selected != 1">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card-collect py-2">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="total-card">
+                            <p>Initial Fund</p>
+                            <div class="total">{{settlementDetails?.initialFund}} JD </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="card-collect">
+                      <div class="top-details">
+                        <h6 class="card-inner-heading"> Cash</h6>
+                        <p> <span> No. Of Currencies {{settlementDetails?.cashAtClosing.length}} </span> </p>
+                      </div>
+                      {{cashForm.valid | json}}
+                      <form [formGroup]="cashForm">
+                        <div formArrayName="cashArray">
+                          <div *ngFor="let item of cashArray.controls;let i = index" class="mb-5">
+                            <div [formGroupName]="i">
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="curncy">
+                                    <!--<h3>{{i+1}}. {{cashArray.at(i).value.currency}} Currency </h3>-->
+                                    <h3>{{i+1}}. {{item.get('currency').value}} Currency </h3>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row justify-content-center">
+                                <div class="col-12 col-md-10 col-lg-8">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <div class="total-card">
+                                        <p>Registered Amount </p>
+                                        <div class="actual-amount">
+                                          <input type="number" class="form-control" formControlName="registerdAmount">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <div class="total-card">
+                                        <p>Closing Difference</p>
+                                        <div class="actual-amount">
+                                          <input type="number" class="form-control" formControlName="differenceAmount">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <div class="total-card">
+                                        <p>Actual Amount </p>
+                                        <div class="actual-amount">
+                                          <input type="number" min="1"
+                                                 class="form-control"
+                                                 formControlName="actualAmount"
+                                                 (keypress)="_commonService.numberOnly($event)">
+                                          <ng-container *ngIf="item.get('actualAmount')?.['errors']">
+                                            <ng-container *ngIf="item.get('actualAmount')?.invalid && item.get('actualAmount')?.touched || item.get('actualAmount')?.dirty">
+                                              <span class="text-danger" *ngIf="item.get('actualAmount')?.errors?.['required']">Input is required</span>
+                                            </ng-container>
+                                          </ng-container>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <div class="total-card">
+                                        <p>Differnces</p>
+                                        <div class="actual-amount">
+                                          <input type="number" class="form-control" formControlName="difference">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-item" [hidden]="selected != 2">
+                <app-session-cheques *ngIf="sessionCheques?.data" [response]="sessionCheques" (loadData)="handleLoadData($event)"></app-session-cheques>
+                <div>
+                  <!--<app-collect-cheque (loadMainData)="loadPageData($event)"></app-collect-cheque>-->
+                </div>
+              </div>
+              <div class="tab-item" [hidden]="selected != 3">
+                <app-session-card-payments *ngIf="sessionCardsPayments?.cards" [response]="sessionCardsPayments" (loadCardData)="handleCardsLoad($event)"></app-session-card-payments>
+                <div>
+                  <!--<app-collect-card (loadMainData)="loadPageData($event)"></app-collect-card>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Notes Start Here-->
+          <div class="col-md-12 mt-3">
+            <div class="card-collect ">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group mb-3">
+                    <h6 class="card-inner-heading">Closing Notes</h6>
+                    <textarea disabled rows="4" class="form-control" minlength="200"
+                              maxlength="200" [value]="settlementDetails?.closingNotes"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group mb-3">
+                    <h6 class="card-inner-heading">Notes</h6>
+                    <textarea rows="4" class="form-control" minlength="200"
+                              maxlength="200"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="btns-group m-0 my-1">
+              <button type="submit" class="btn btn-cancel"> Cancel</button>
+              <button type="submit" class="btn btn-save"> Settle Register</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ng-template #loading>
+          <div>
+            <app-loading></app-loading>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

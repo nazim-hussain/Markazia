@@ -157,7 +157,6 @@ export class LoginComponent implements OnInit {
                 // localStorage.removeItem('password');
                 // localStorage.removeItem('rememberMe');
               }
-
               if (this.userData?.role?.roleId == 1) {
                 this.router.navigateByUrl('/opening-register');
               } else if (this.userData?.role?.roleId == 36) {
