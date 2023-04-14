@@ -6,6 +6,7 @@
 :root {
   --dark-gray: #1B212D;
   --light-gray: #929EAE;
+  --green: #11AF22;
 }
 body {
   font-family: "Kumbh Sans", sans-serif;
@@ -33,6 +34,9 @@ label {
 }
 .light-gray{
     color:var(--light-gray) !important;
+}
+.green-clr{
+    color:var(--green) !important;
 }
 .page-title {
   h3 {
@@ -540,6 +544,7 @@ input.form-control:focus {
       font-weight: 600;
       color: #000;
       margin: 0px;
+      width: 136px;
     }
 
     .total {
@@ -906,10 +911,9 @@ input.form-control:focus {
 
 .custom-session-dd {
   button.dropdown-item {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     color: #1B212D;
-    padding: 15px 10px;
   }
 
   .dropdown-item:active {
@@ -933,16 +937,37 @@ input.form-control:focus {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: repeat(4, 1fr);
-    gap:15px
+    gap:15px;
+    h6 + p {
+        font-size:14px
+    }
   }
 
   .modal-footer {
-    border-top: none
+    border-top: none;
   }
 }
 .form-check-input:checked {
   background-color: #dc3545 !important;
   border-color: pink !important;
+}
+.card-inner-heading {
+  font-size: 18px;
+  font-weight: 700;
+}
+.card-with-details {
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-gray);
+  }
+  h6{
+      font-weight:600;
+  }
+  span {
+    color: var(--light-gray);
+    font-size: 14px;
+  }
 }
 @media (max-width: 768px) {
   .card-login {

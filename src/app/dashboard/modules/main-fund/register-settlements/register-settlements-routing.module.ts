@@ -5,7 +5,7 @@ import { SettelComponent } from './settel/settel.component';
 
 const routes: Routes = [
   { path: '', component: RegSettlementComponent },
-  { path: 'settle', component: SettelComponent },
+  { path: 'settle/:sessionId', component: SettelComponent },
 ];
 
 @NgModule({

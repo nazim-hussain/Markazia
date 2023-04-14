@@ -121,10 +121,15 @@
                     </div>
                     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right custom-session-dd"
                         role="menu" aria-labelledby="button-alignment">
-                      <li *ngIf="item.status == status.Closed" role="menuitem"><button type="button" class="dropdown-item">Settle</button></li>
-                      <li role="menuitem"><button type="button" class="dropdown-item" (click)="openModal(content,item)">Force Close</button></li>
-                      <li role="menuitem"><button type="button" class="dropdown-item">View Register</button></li>
-                      <li role="menuitem"><button type="button" class="dropdown-item">View Session</button></li>
+                        <li *ngIf="item.status == status.Closed || item.status == status.Partial" role="menuitem">
+                          <button type="button" class="dropdown-item"
+                                  (click)="handleSettle(item?.registerSessionId)">
+                            Settle
+                          </button>
+                        </li>
+                        <li role="menuitem"><button type="button" class="dropdown-item" (click)="openModal(content,item)">Force Close</button></li>
+                        <li role="menuitem"><button type="button" class="dropdown-item">View Register Details</button></li>
+                        <li role="menuitem"><button type="button" class="dropdown-item">View Session Details</button></li>
                     </ul>
                   </div>
                 </td>
@@ -177,55 +182,62 @@
       <div class="body-layout mt-3">
         <div class="d-flex flex-column">
           <h6 class="dark-gray fw-bolder">Branch Name</h6>
-          <h6 class="light-gray fw-bolder">{{sessionDetails?.branch?.branchName}}</h6>
+          <p class="light-gray">{{sessionDetails?.branch?.branchName}}</p>
         </div>
         <div class="d-flex flex-column">
           <h6 class="dark-gray fw-bolder">Register Name</h6>
-          <h6 class="light-gray fw-bolder">{{sessionDetails?.register?.registersName}}</h6>
+          <p class="light-gray">{{sessionDetails?.register?.registersName}}</p>
         </div>
         <div class="d-flex flex-column">
           <h6 class="dark-gray fw-bolder">Register No</h6>
-          <h6 class="light-gray fw-bolder">{{sessionDetails?.register?.registerId}}</h6>
+          <p class="light-gray">{{sessionDetails?.register?.registerId}}</p>
         </div>
         <div class="d-flex flex-column">
           <h6 class="dark-gray fw-bolder">Session No</h6>
-          <h6 class="light-gray fw-bolder">{{sessionDetails?.registerSessionId}}</h6>
+          <p class="light-gray">{{sessionDetails?.registerSessionId}}</p>
         </div>
         <div class="d-flex flex-column">
           <h6 class="dark-gray fw-bolder">Employee</h6>
-          <h6 class="light-gray fw-bolder">{{sessionDetails?.createdBy?.fullName}}</h6>
+          <p class="light-gray">{{sessionDetails?.createdBy?.fullName}}</p>
         </div>
       </div>
       <h5 class="dark-gray fw-bolder my-4">You are about to force close the following register</h5>
-      <form [formGroup]="forceCloseForm">
-        <!--{{forceCloseForm.value | json}}-->
-        <div class="row my-5">
-          <div class="col-md-4">
-            <div class="form-check form-check-inline">
-              <input type="radio" id="close" formControlName="value" value="1" class="form-check-input" />
-              <label class="form-check-label" for="close">Close Register for all day </label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-check form-check-inline">
-              <input type="radio" id="session" formControlName="value" value="2" class="form-check-input" />
-              <label class="form-check-label" for="session">Close Session</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-check form-check-inline">
-              <input type="radio" id="register" formControlName="value" value="3" class="form-check-input" />
-              <label class="form-check-label" for="register">Deactivate Register</label>
-            </div>
+      <div class="row my-5">
+        <!--NOTE:=> [cr,cs,dr] is concated to make value unique for radio because due to same value of cr and cs both radio input are selected once-->
+        <div class="col-md-4">
+          <div class="form-check form-check-inline">
+            <input type="radio" id="close" [value]="'cr_'+ sessionDetails?.register?.registerId" [(ngModel)]="radioValue" class="form-check-input" />
+            <label class="form-check-label" for="close">Close Register for all day </label>
           </div>
         </div>
-      </form>
+        <div class="col-md-4">
+          <div class="form-check form-check-inline">
+            <input type="radio" id="session" [value]="'cs_'+sessionDetails?.registerSessionId" [(ngModel)]="radioValue"
+                   class="form-check-input" [disabled]="sessionDetails.status == status.Closed" />
+            <label class="form-check-label" for="session">Close Session</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-check form-check-inline">
+            <input type="radio" [disabled]="registerDetails.status == 2002" id="register"
+                   [value]="'dr_'+ sessionDetails?.register?.registerId"
+                   [(ngModel)]="radioValue" class="form-check-input" />
+            <label class="form-check-label" for="register">Deactivate Register</label>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer p-0">
       <div class="btns-group">
         <button type="button" class="btn btn-cancel" (click)="modal.close('Save click')">Cancel</button>
-        <button type="button" class="btn btn-save">Submit</button>
+        <button type="button" class="btn btn-save" (click)="handleSubmit()">Submit</button>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #success>
+  <div class="modal-body">
+    <h5 *ngIf="response?.Errors" class="text-danger m-0 py-5 text-center"><i class="fa-regular fa-circle-xmark me-2"></i>{{response?.Errors[0].ErrorMessageEn}}</h5>
+    <h5 *ngIf="response?.isSuccess" class="m-0 py-5 text-center"><i class="green-clr fa-regular fa-circle-check me-2"></i>{{message}}</h5>
   </div>
 </ng-template>

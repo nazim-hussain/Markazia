@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { RegisterSettlementService } from '../register-settlements-service/register-settlement.service';
 import * as _ from 'underscore';
 import { TransactionHistoryService } from '../../../treasury/transactions-history/transaction-history-services/transaction-history.service';
@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Status } from '../../../../../shared/enums/enum';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonService } from '../../../../../services/common.service';
 @Component({
   selector: 'app-reg-settlement',
   templateUrl: './reg-settlement.component.html',
@@ -25,11 +26,15 @@ export class RegSettlementComponent {
   employeesList: any[] = [];
   statusList: any[] = [];
   sessionFilterForm: FormGroup;
-  forceCloseForm: FormGroup;
   sessionDetails: any;
+  registerDetails: any;
   status = Status;
+  radioValue: any;
+  response: any;
+  message = '';
+  @ViewChild('success') success: ElementRef;
   constructor(private _registerSettlementService: RegisterSettlementService,
-    private _transactionHistoryService: TransactionHistoryService,
+    private _transactionHistoryService: TransactionHistoryService, private _commonService: CommonService,
     private fb: FormBuilder, public datepipe: DatePipe, private modalService: NgbModal) {
   }
   initFilterForm() {
@@ -41,18 +46,12 @@ export class RegSettlementComponent {
       status: [null],
     })
   }
-  initForcCloseForm() {
-    this.forceCloseForm = this.fb.group({
-      value:['']
-    })
-  }
   ngOnInit() {
     this.getAllSessions(this.filterParams);
     this.getBaranches();
     this.getEmployees();
     this.getStatusList();
     this.initFilterForm();
-    this.initForcCloseForm();
     this.sessionFilterForm.valueChanges.subscribe(value => {
       let dateObj = { fromDate: '', toDate: '' };
       let formValues;
@@ -80,11 +79,64 @@ export class RegSettlementComponent {
       this.getAllSessions(this.filterParams)
     })
   }
+  handleSettle(sessionId) {
+    this._commonService.NavigateToRoute("register-settlements/settle/", sessionId);
+  }
   openModal(content, item) {
+    this.radioValue = '';
     this.sessionDetails = {};
     this.sessionDetails = item;
-    console.log(this.sessionDetails);
-    this.modalService.open(content, { centered: true, size:'lg' });
+    this._registerSettlementService.getRegisterDetails(item?.register?.registerId).subscribe(response => {
+      this.registerDetails = {};
+      this.registerDetails = response.data;
+      this.modalService.open(content, { centered: true, size: 'lg' });
+    })
+  }
+
+  handleSubmit() {
+    let split = this.radioValue.split('_');
+    let action = split[0];
+    let value = split[1];
+    if (action == 'cr') {
+      const payload = new FormData();
+      payload.append('registerId', value);
+      this._registerSettlementService.forceCloseRegiter(payload).subscribe(response => {
+        this.response = response;
+        this.message = 'Register successfully closed for all day.';
+        this.modalService.dismissAll();
+        const successRef = this.modalService.open(this.success);
+        setTimeout(() => {
+          successRef.close();
+        }, 3000)
+      })
+    }
+    else if (action == 'cs') {
+      const payload = new FormData();
+      payload.append('sessionId', value);
+      this._registerSettlementService.forceCloseSession(payload).subscribe(response => {
+        this.response = response;
+        this.message = 'Session successfully forced to close, it’s in waiting status now.';
+        this.modalService.dismissAll();
+        const successRef = this.modalService.open(this.success);
+        setTimeout(() => {
+          successRef.close();
+        }, 3000)
+
+      })
+    }
+    else if (action == 'dr') {
+      let payload = { id: value, status: 2002 }
+      this._registerSettlementService.updateRegister(payload).subscribe(response => {
+        this.response = response;
+        this.message = 'Register successfully deactivated.';
+        this.modalService.dismissAll();
+        const successRef = this.modalService.open(this.success);
+        setTimeout(() => {
+          successRef.close();
+        }, 3000)
+
+      })
+    }
   }
   resetDate() {
     this.sessionFilterForm.controls['date'].setValue('');
@@ -96,20 +148,18 @@ export class RegSettlementComponent {
     let defaultParams = `pageNo=${this.pageNo}&sort=${this.sort}&pageSize=${this.pageSize}`
     this._registerSettlementService.getAllSessions((filterParams && filterParams + `&${defaultParams}`) || (`?${defaultParams}`)).subscribe(response => {
       this.sessionList = response?.data;
-      console.log(this.sessionList);
       this.totalRecords = response?.totalRecordCount;
       this.pagin = Math.ceil(this.totalRecords / 6);
       this.pages = _.range(this.pagin);
     })
   }
   getBaranches() {
-    this._transactionHistoryService.GetBranches().subscribe(response => {
+    this._registerSettlementService.getBranches().subscribe(response => {
       this.branchesList = response.data;
-      console.log(this.branchesList);
     })
   }
   getEmployees() {
-    this._transactionHistoryService.GetEmployees().subscribe(response => {
+    this._registerSettlementService.getEmployees().subscribe(response => {
       this.employeesList = response.data;
     })
   }

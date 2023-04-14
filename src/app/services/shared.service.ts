@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class SharedService {
-  constructor() {}
+  constructor() { }
   getHeaders() {
     return {
       headers: new HttpHeaders()
