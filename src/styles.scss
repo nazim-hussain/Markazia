@@ -3,11 +3,13 @@
 /*@import "~bootstrap/dist/css/bootstrap.css";*/
 @import "./global.scss";
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700&display=swap");
+
 :root {
   --dark-gray: #1B212D;
   --light-gray: #929EAE;
   --green: #11AF22;
 }
+
 body {
   font-family: "Kumbh Sans", sans-serif;
 }
@@ -29,14 +31,29 @@ li,
 label {
   font-family: "Kumbh Sans", sans-serif;
 }
-.dark-gray{
-    color:var(--dark-gray) !important;
+
+.dark-gray {
+  color: var(--dark-gray) !important;
 }
-.light-gray{
-    color:var(--light-gray) !important;
+
+.light-gray {
+  color: var(--light-gray) !important;
 }
-.green-clr{
-    color:var(--green) !important;
+
+.green-clr {
+  color: var(--green) !important;
+}
+.fw-400{
+    font-weight:400 !important
+}
+.fw-500 {
+  font-weight: 500 !important
+}
+.fw-600 {
+  font-weight: 600 !important
+}
+.fw-700 {
+  font-weight: 700 !important
 }
 .page-title {
   h3 {
@@ -922,7 +939,7 @@ input.form-control:focus {
 }
 
 .register-sessions-table.card-table {
-/*  overflow: visible;
+  /*  overflow: visible;
 
   .table-responsive {
     overflow: visible;
@@ -937,9 +954,10 @@ input.form-control:focus {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: repeat(4, 1fr);
-    gap:15px;
+    gap: 15px;
+
     h6 + p {
-        font-size:14px
+      font-size: 14px
     }
   }
 
@@ -947,28 +965,49 @@ input.form-control:focus {
     border-top: none;
   }
 }
+
 .form-check-input:checked {
   background-color: #dc3545 !important;
   border-color: pink !important;
 }
+
 .card-inner-heading {
   font-size: 18px;
   font-weight: 700;
 }
+
 .card-with-details {
   p {
     font-size: 14px;
     font-weight: 600;
     color: var(--dark-gray);
   }
-  h6{
-      font-weight:600;
+
+  h6 {
+    font-weight: 600;
   }
+
   span {
     color: var(--light-gray);
     font-size: 14px;
   }
+
 }
+  .custom-form-input {
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1b212d;
+      margin-bottom: 10px;
+    }
+    .form-control {
+      border: 1px solid #d1d1d1;
+      border-radius: 12px;
+      font-size: 14px !important;
+      height: 46px;
+    }
+  }
+
 @media (max-width: 768px) {
   .card-login {
     padding: 30px;

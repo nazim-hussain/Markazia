@@ -147,6 +147,7 @@
                                           <input type="number" min="1"
                                                  class="form-control"
                                                  formControlName="actualAmount"
+                                                 (input)="actualAmountChange(item.get('registerdAmount').value,item.get('actualAmount').value,i)"
                                                  (keypress)="_commonService.numberOnly($event)">
                                           <ng-container *ngIf="item.get('actualAmount')?.['errors']">
                                             <ng-container *ngIf="item.get('actualAmount')?.invalid && item.get('actualAmount')?.touched || item.get('actualAmount')?.dirty">

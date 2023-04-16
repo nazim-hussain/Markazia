@@ -31,6 +31,15 @@ export class RegisterSettlementService {
   updateRegister(data): Observable<any>  {
     return this.http.post(this.apiUrl + 'Register/UpdateRegister', data, this.sharedService.getHeaders());
   }
+  actionOnCheque(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/ActionsOnCheques', data, this.sharedService.getHeaders());
+  }
+  reverseActionOnCheque(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/ReverseActionsOnCheques', data, this.sharedService.getHeaders());
+  }
+  editCollectionCheuqe(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/EditCollectionCheuqe', data, this.sharedService.getHeaders());
+  }
   getSessionDetailSettlement(sessionId): Observable<any> {
     return this.http.get(this.apiUrl + `SessionsSettlements/GetSessionDetailsforSettlement?sessionId=${sessionId}`, this.sharedService.getHeaders());
   }
@@ -49,9 +58,6 @@ export class RegisterSettlementService {
       `Register/GetRegisterDetails?Id=${registerId}`,
       this.sharedService.getHeaders());
   }
-  /**
- * Branches
- */
   getBranches(): Observable<any> {
     return this.http.get<any>(
       this.apiUrl + `Branches/GetBranches?sort=1&pageNo=0&pageSize=1000`,
@@ -59,10 +65,6 @@ export class RegisterSettlementService {
       this.sharedService.getHeaders()
     );
   }
-
-  /**
-   * employees
-   */
   getEmployees(): Observable<any> {
     return this.http.get<any>(
       this.apiUrl + `User/GetUsers?pageNo=0&pageSize=1000`,
@@ -70,9 +72,4 @@ export class RegisterSettlementService {
       this.sharedService.getHeaders()
     );
   }
-
-  //https://markaziaposdev.azurewebsites.net/POSAPI/api/SessionsSettlements/GetSessionCheques?SessionId=95
-
-  //  https://markaziaposdev.azurewebsites.net/POSAPI/api/SessionsSettlements/GetSessionCardsPayments?SessionId=95
-
 }

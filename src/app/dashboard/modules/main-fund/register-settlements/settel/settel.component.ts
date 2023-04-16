@@ -48,10 +48,9 @@ export class SettelComponent implements OnInit {
   getSessionDetailsSettlements() {
     this._registerSettlementService.getSessionDetailSettlement(this.sessionId).subscribe(response => {
       this.settlementDetails = response.data;
-      console.log(this.settlementDetails);
       this.settlementDetails?.cashAtClosing.forEach(item => {
         let formGroup: FormGroup = this.fb.group({
-          registerdAmount: [{ value:item.registerdAmount, disabled: true }],
+          registerdAmount: [{ value: item.registerdAmount, disabled: true }],
           differenceAmount: [{ value: item.differenceAmount, disabled: true }],
           actualAmount: ['', [Validators.required]],
           difference: [{ value: '', disabled: true }],
@@ -60,7 +59,6 @@ export class SettelComponent implements OnInit {
         this.cashArray.push(formGroup);
       })
     })
-    console.log(this.cashForm); 
   }
   getSessionCheques() {
     this._registerSettlementService.getSessionCheques(this.sessionId, this.pageNo, this.searchText).subscribe(response => {
@@ -75,29 +73,32 @@ export class SettelComponent implements OnInit {
   handleKeyPress(event) {
     this._commonService.numberOnly(event)
   }
-  actualAmountChange(amount, event, index) {
-    let value = event.target.value
-    let id = 'da' + index
-    let item = this.amountDiffernce.find(x => x.nativeElement.id == id);
+  actualAmountChange(amount, value, index) {
+    let formGroup = this.cashArray.at(index) as FormGroup;
     if (!value) {
-      item.nativeElement.value = '';
+      formGroup.controls['difference'].setValue('');
       return
     }
-    item.nativeElement.value = (+amount) - (+value);
+    formGroup.controls['difference'].setValue(((+amount) - (+value)));
   }
 
   chooseTab(val: number) {
     this.searchText = '';
     this.pageNo = 0;
-    this.selected = val;
-    if ((val == 2)) {
-      this.isCheque = true;
-      this.isCard = false;
-      this.getSessionCheques();
-    } else if ((val == 3)) {
-      this.isCheque = false;
-      this.isCard = true;
-      this.getSessionCardsPayments();
+    if (this.cashForm.valid) {
+      this.selected = val;
+      if ((val == 2)) {
+        this.isCheque = true;
+        this.isCard = false;
+        this.getSessionCheques();
+      } else if ((val == 3)) {
+        this.isCheque = false;
+        this.isCard = true;
+        this.getSessionCardsPayments();
+      }
+    } else {
+      this.cashForm.markAllAsTouched();
+      return;
     }
   }
   handleLoadData(event) {

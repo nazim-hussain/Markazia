@@ -36,17 +36,25 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of sessionCheques" [class.highlight-tr]="item?.wrongActionInClosing">
-                  <td> {{ item?.chequeCustomer}}</td>
-                  <td> {{item?.chequeNo}} </td>
-                  <td> {{ item?.chequeCollectionJod}} JD</td>
-                  <td> {{ item.chequeDate | date :'shortDate' }}</td>
-                  <td> {{ item.bank[0]?.lookupName }}</td>
+                  <ng-container *ngIf="item.settleActionTaken && item.settleActionType == 'edit';else chequeDetails">
+                    <td> {{ item?.settleDrawerName}}</td>
+                    <td> {{item?.settleChequeNumber}} </td>
+                    <td> {{ item?.chequeCollectionJod}} JD</td>
+                    <td> {{ item.settleChequeDate | date :'shortDate' }}</td>
+                    <td> {{ item.settleBank[0]?.lookupName }}</td>
+                  </ng-container>
+                  <ng-template #chequeDetails>
+                    <td> {{ item?.chequeCustomer}}</td>
+                    <td> {{item?.chequeNo}} </td>
+                    <td> {{ item?.chequeCollectionJod}} JD</td>
+                    <td> {{ item.chequeDate | date :'shortDate' }}</td>
+                    <td> {{ item.bank[0]?.lookupName }}</td>
+                  </ng-template>
                   <td>
                     <ng-container *ngIf="item.settleActionTaken;else elseBlock">
-                      <button class="btn btn-undo">
+                      <button class="btn btn-undo" (click)="hadleReverseActionOnCheque(item?.chequeCollectionId)">
                         Undo <img src="assets/images/undo.png" alt="">
                       </button>
-
                       <button class="btn btn-right"
                               *ngIf="item.settleActionType == 'right'"
                               [disabled]="item.settleActionType == 'right'">
@@ -65,13 +73,13 @@
                     </ng-container>
 
                     <ng-template #elseBlock>
-                      <button class="btn btn-right">
+                      <button class="btn btn-right" (click)="handleActionClick('right',item?.chequeCollectionId)">
                         <i class="fa-regular fa-circle-check"></i>
                       </button>
-                      <button class="btn btn-xmark">
+                      <button class="btn btn-xmark" (click)="handleActionClick('wrong',item?.chequeCollectionId)">
                         <i class="fa-regular fa-circle-xmark"></i>
                       </button>
-                      <button class="btn btn-edit">
+                      <button class="btn btn-edit" (click)="handleEditAction(content,item)">
                         <i class="fa-solid fa-pen"></i>
                       </button>
                     </ng-template>
@@ -118,3 +126,81 @@
     </ul>
   </div>
 </div>
+<ng-template #content let-modal>
+  <form [formGroup]="chequeForm" (submit)="handleSubmit()">
+    <div class="fc-modal p-4 custom-form-input">
+      <div class="modal-header p-0 flex-column align-items-start">
+        <h4 class="modal-title fw-bolder pb-1" ngbAutofocus>Edit Cheque</h4>
+        <h6 class="pb-2 fw-600">Customer Name: <span class="light-gray">{{chequeDetails?.chequeCustomer}}</span></h6>
+      </div>
+      <div class="modal-body p-0">
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <label>Amount To Pay *</label>
+            <input class="form-control" formControlName="chequeCollectionJod" placeholder="Amount to Pay" />
+          </div>
+          <div class="col-sm-6">
+            <label>Cheque No *</label>
+            <input class="form-control" formControlName="chequeNo" (keypress)="_commonService.numberOnly($event)" placeholder="Cheque no" />
+            <ng-container *ngIf="f['chequeNo']?.['errors']">
+              <ng-container *ngIf="f['chequeNo']?.invalid && f['chequeNo']?.touched || f['chequeNo']?.dirty">
+                <span class="text-danger" *ngIf="f['chequeNo']?.errors?.['required']">Input is required</span>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <label>Bank</label>
+            <ng-select class="flex-grow-1 mt-3 mt-md-0" formControlName="bankId" placeholder="Bank" [items]="bankList" bindLabel="name" bindValue="id">
+            </ng-select>
+            <ng-container *ngIf="f['bankId']?.['errors']">
+              <ng-container *ngIf="f['bankId']?.invalid && f['bankId']?.touched || f['bankId']?.dirty">
+                <span class="text-danger" *ngIf="f['bankId']?.errors?.['required']">Input is required</span>
+              </ng-container>
+            </ng-container>
+          </div>
+          <div class="col-sm-6">
+            <label>Cheque Drawer Name</label>
+            <input type="text" class="form-control" formControlName="chequeDrawerName" placeholder="Cheque drawer name" />
+            <ng-container *ngIf="f['chequeDrawerName']?.['errors']">
+              <ng-container *ngIf="f['chequeDrawerName']?.invalid && f['chequeDrawerName']?.touched || f['chequeDrawerName']?.dirty">
+                <span class="text-danger" *ngIf="f['chequeDrawerName']?.errors?.['required']">Input is required</span>
+              </ng-container>
+            </ng-container>
+
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <label>Date*</label>
+            <input type="date" class="form-control" formControlName="chequeDate" placeholder="date" />
+            <ng-container *ngIf="f['chequeDate']?.['errors']">
+              <ng-container *ngIf="f['chequeDate']?.invalid && f['chequeDate']?.touched || f['chequeDate']?.dirty">
+                <span class="text-danger" *ngIf="f['chequeDate']?.errors?.['required']">Input is required</span>
+              </ng-container>
+            </ng-container>
+          </div>
+          <div class="col-md-6">
+            <div class="form-check form-check-inline">
+              <input type="checkbox" (change)="handleCheckBoxChange($event)" id="samecustomer" class="form-check-input" />
+              <label class="form-check-label" for="samecustomer">Same Customer</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer p-4">
+      <div class="btns-group">
+        <button type="button" class="btn btn-cancel" (click)="modal.close('Save click')">Cancel</button>
+        <button type="submit" class="btn btn-save">Submit</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<ng-template #successModal>
+  <div class="modal-body">
+    <!--<h5 *ngIf="response?.Errors" class="text-danger m-0 py-5 text-center"><i class="fa-regular fa-circle-xmark me-2"></i>{{response?.Errors[0].ErrorMessageEn}}</h5>
+    <h5 *ngIf="response?.isSuccess" class="m-0 py-5 text-center"><i class="green-clr fa-regular fa-circle-check me-2"></i>{{message}}</h5>-->
+  </div>
+</ng-template>
