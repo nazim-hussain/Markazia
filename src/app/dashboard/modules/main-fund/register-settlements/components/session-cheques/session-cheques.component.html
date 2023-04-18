@@ -162,7 +162,7 @@
           </div>
           <div class="col-sm-6">
             <label>Cheque Drawer Name</label>
-            <input type="text" class="form-control" formControlName="chequeDrawerName" placeholder="Cheque drawer name" />
+            <input type="text" class="form-control" (keypress)="_commonService.omitSpecialChar($event)" formControlName="chequeDrawerName" placeholder="Cheque drawer name" />
             <ng-container *ngIf="f['chequeDrawerName']?.['errors']">
               <ng-container *ngIf="f['chequeDrawerName']?.invalid && f['chequeDrawerName']?.touched || f['chequeDrawerName']?.dirty">
                 <span class="text-danger" *ngIf="f['chequeDrawerName']?.errors?.['required']">Input is required</span>
@@ -198,9 +198,19 @@
     </div>
   </form>
 </ng-template>
-<ng-template #successModal>
+<ng-template #successModal let-modal>
   <div class="modal-body">
-    <!--<h5 *ngIf="response?.Errors" class="text-danger m-0 py-5 text-center"><i class="fa-regular fa-circle-xmark me-2"></i>{{response?.Errors[0].ErrorMessageEn}}</h5>
-    <h5 *ngIf="response?.isSuccess" class="m-0 py-5 text-center"><i class="green-clr fa-regular fa-circle-check me-2"></i>{{message}}</h5>-->
+    <!--<h5 *ngIf="response?.Errors" class="text-danger m-0 py-5 text-center"><i class="fa-regular fa-circle-xmark me-2"></i>{{response?.Errors[0].ErrorMessageEn}}</h5>-->
+    <div class="d-flex flex-column align-items-center gap-2 text-center p-3" *ngIf="editCollectionResponse?.isSuccess">
+      <i class="green-clr fa-regular fa-circle-check fa-2x"></i>
+      <h5>Settle successfully!</h5>
+      <h6 class="m-0">
+        Your settlement is completed successfully
+        Then Print settlement Sheet (Needed)
+      </h6>
+      <div class="btns-group m-0 d-block">
+        <button type="button" class="btn btn-save" (click)="modal.close('Save click')">Close</button>
+      </div>
+    </div>
   </div>
 </ng-template>

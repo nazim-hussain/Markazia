@@ -40,6 +40,15 @@ export class RegisterSettlementService {
   editCollectionCheuqe(data): Observable<any>  {
     return this.http.post(this.apiUrl + 'SessionsSettlements/EditCollectionCheuqe', data, this.sharedService.getHeaders());
   }
+  actionOnCard(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/ActionsOnCard', data, this.sharedService.getHeaders());
+  }
+  reverseActionOnCard(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/ReverseActionsOnCard', data, this.sharedService.getHeaders());
+  }
+  editCollectionCard(data): Observable<any>  {
+    return this.http.post(this.apiUrl + 'SessionsSettlements/EditCollectionByCards', data, this.sharedService.getHeaders());
+  }
   getSessionDetailSettlement(sessionId): Observable<any> {
     return this.http.get(this.apiUrl + `SessionsSettlements/GetSessionDetailsforSettlement?sessionId=${sessionId}`, this.sharedService.getHeaders());
   }

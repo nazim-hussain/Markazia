@@ -108,7 +108,6 @@
                         <h6 class="card-inner-heading"> Cash</h6>
                         <p> <span> No. Of Currencies {{settlementDetails?.cashAtClosing.length}} </span> </p>
                       </div>
-                      {{cashForm.valid | json}}
                       <form [formGroup]="cashForm">
                         <div formArrayName="cashArray">
                           <div *ngFor="let item of cashArray.controls;let i = index" class="mb-5">

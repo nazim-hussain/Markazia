@@ -27,6 +27,17 @@ export class CommonService {
       return false;
     }
     return true;
-
+  }
+  charOnly(event: any): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if ((charCode > 47 && charCode < 58)) {
+      return false;
+    }
+    return true;
+  }
+  omitSpecialChar(event: any): boolean {
+    var k;
+    k = event.charCode;
+    return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k <= 48 && k >= 57));
   }
 }

@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'underscore';
@@ -26,6 +26,7 @@ export class SessionChequesComponent {
   totalRecordCount: number;
   @Output() loadData = new EventEmitter<any>();
   chequeForm: FormGroup;
+  @ViewChild('successModal') successModal: ElementRef;
   constructor(private fb: FormBuilder, private _registerSettlementService: RegisterSettlementService,
     private _modalService: NgbModal, private _closeRegisterService: CloseRegisterService, public _commonService: CommonService) {
 
@@ -90,6 +91,7 @@ export class SessionChequesComponent {
         this.editCollectionResponse = response;
         this.loadData.emit({ page: 0, chequeNumber: '' });
         this._modalService.dismissAll();
+        this._modalService.open(this.successModal, { centered: true, })
       })
     }
     else {
