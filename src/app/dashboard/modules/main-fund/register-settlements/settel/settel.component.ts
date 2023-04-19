@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../../../../services/common.service';
+import { HeaderService } from '../../../../../services/header.service';
 import { RegisterSettlementService } from '../register-settlements-service/register-settlement.service';
 
 
@@ -23,13 +24,14 @@ export class SettelComponent implements OnInit {
   searchText = '';
   differenceAmount = null;
   cashForm: FormGroup;
-  @ViewChildren("amountDiffernce") amountDiffernce: QueryList<ElementRef>
   constructor(private fb: FormBuilder,
-    private activeRoute: ActivatedRoute, private _registerSettlementService: RegisterSettlementService,
+    private activeRoute: ActivatedRoute,
+    private _registerSettlementService: RegisterSettlementService,
+    private _headerService: HeaderService,
     public _commonService: CommonService) {
-
   }
   ngOnInit() {
+    this._headerService.setTitle('Settled Sessions');
     this.initCashForm();
     this.activeRoute.params.subscribe(params => {
       this.sessionId = params['sessionId'];

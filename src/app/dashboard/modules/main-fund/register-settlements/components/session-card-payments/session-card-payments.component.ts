@@ -24,6 +24,7 @@ export class SessionCardPaymentsComponent {
   bankList: any;
   cardForm: FormGroup;
   cardDetails: any;
+  @Input() isSettle = true;
   editCollectionResponse: any;
   @ViewChild('successModal') successModal: ElementRef;
   constructor(private fb: FormBuilder, private _registerSettlementService: RegisterSettlementService,
@@ -57,6 +58,12 @@ export class SessionCardPaymentsComponent {
   get f() {
     return this.cardForm.controls;
   }
+  handleCardDetails(item, content) {
+    this.cardDetails = {};
+    this.cardDetails = item;
+    console.log(this.cardDetails);
+    this._modalService.open(content, { centered: true, size: 'lg' });
+  }
   handleEditAction(content, item) {
     this.getBanks();
     this.cardDetails = {};
@@ -73,6 +80,7 @@ export class SessionCardPaymentsComponent {
       cardLast4Digits: item?.cardLast4Digits,
     }
     this.cardForm.patchValue(obj);
+    this.cardForm.controls['cardDrawerName'].setValue('');
     this._modalService.open(content, { centered: true, size: 'lg' });
   }
   handleCheckBoxChange(event) {
@@ -101,6 +109,7 @@ export class SessionCardPaymentsComponent {
     })
   }
   handleSubmit() {
+      debugger;
     if (this.cardForm.valid) {
       let formData = new FormData();
       formData.append('ordersCardsCollectionId', this.f['ordersCardsCollectionId'].value);
@@ -111,6 +120,7 @@ export class SessionCardPaymentsComponent {
       formData.append('bankId', this.f['bankId'].value);
       formData.append('cardFirst6Digits', this.f['cardFirst6Digits'].value);
       formData.append('cardLast4Digits', this.f['cardLast4Digits'].value);
+      debugger;
       this._registerSettlementService.editCollectionCard(formData).subscribe(response => {
         this.editCollectionResponse = response;
         if (this.editCollectionResponse.isSuccess) {

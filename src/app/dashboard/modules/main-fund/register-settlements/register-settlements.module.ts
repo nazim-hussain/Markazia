@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { SettelComponent } from './settel/settel.component';
 import { SessionCardPaymentsComponent } from './components/session-card-payments/session-card-payments.component';
 import { SessionChequesComponent } from './components/session-cheques/session-cheques.component';
+import { SessionDetailsComponent } from './session-details/session-details.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { SessionChequesComponent } from './components/session-cheques/session-ch
     RegSettlementComponent,
     SettelComponent,
     SessionCardPaymentsComponent,
-    SessionChequesComponent
+    SessionChequesComponent,
+    SessionDetailsComponent
   ],
   imports: [
     CommonModule,

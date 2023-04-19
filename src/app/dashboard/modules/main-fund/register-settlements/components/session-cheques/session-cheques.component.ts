@@ -26,6 +26,7 @@ export class SessionChequesComponent {
   totalRecordCount: number;
   @Output() loadData = new EventEmitter<any>();
   chequeForm: FormGroup;
+  @Input() isSettle = true;
   @ViewChild('successModal') successModal: ElementRef;
   constructor(private fb: FormBuilder, private _registerSettlementService: RegisterSettlementService,
     private _modalService: NgbModal, private _closeRegisterService: CloseRegisterService, public _commonService: CommonService) {
@@ -54,6 +55,12 @@ export class SessionChequesComponent {
   get f() {
     return this.chequeForm.controls;
   }
+  handleChequeDetails(item,content) {
+    this.chequeDetails = {};
+    this.chequeDetails = item;
+    console.log(this.chequeDetails);
+    this._modalService.open(content, { centered: true, size: 'lg' });
+  }
   handleEditAction(content, item) {
     this.getBanks();
     this.chequeDetails = {};
@@ -66,6 +73,7 @@ export class SessionChequesComponent {
       chequeNo: item?.chequeNo,
     }
     this.chequeForm.patchValue(obj);
+    this.chequeForm.controls['chequeDrawerName'].setValue('');
     this._modalService.open(content, { centered: true, size: 'lg' });
   }
   handleCheckBoxChange(event) {

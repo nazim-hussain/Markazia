@@ -123,13 +123,13 @@
                         role="menu" aria-labelledby="button-alignment">
                         <li *ngIf="item.status == status.Closed || item.status == status.Partial" role="menuitem">
                           <button type="button" class="dropdown-item"
-                                  (click)="handleSettle(item?.registerSessionId)">
+                                  (click)="navigateTo('settle',item?.registerSessionId)">
                             Settle
                           </button>
                         </li>
                         <li role="menuitem"><button type="button" class="dropdown-item" (click)="openModal(content,item)">Force Close</button></li>
                         <li role="menuitem"><button type="button" class="dropdown-item">View Register Details</button></li>
-                        <li role="menuitem"><button type="button" class="dropdown-item">View Session Details</button></li>
+                        <li role="menuitem"><button type="button" class="dropdown-item" (click)="navigateTo('session',item?.registerSessionId)">View Session Details</button></li>
                     </ul>
                   </div>
                 </td>
