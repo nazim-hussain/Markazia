@@ -165,6 +165,9 @@ export class LoginComponent implements OnInit {
               else if (this.userData?.role?.roleId == 37) {
                 this.router.navigateByUrl('/');
               }
+              else if (this.userData?.role?.roleId == 38) {
+                this.router.navigateByUrl('/');
+              }
             } else {
               var response = this.userInfo.Errors[0];
               this.errorMessage = response.ErrorMessageEn;

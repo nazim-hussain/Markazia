@@ -1,6 +1,5 @@
 <div class="card-page">
-
-  <div class="row">
+  <div class="row" *ngIf="settlementDetails;else notFound">
     <div class="col-md-12">
       <div class="card-collect card-with-details">
         <div class="d-flex align-items-center justify-content-between">
@@ -221,15 +220,8 @@
         </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <ng-template #loading>
-          <div>
-            <app-loading></app-loading>
-          </div>
-        </ng-template>
-      </div>
-    </div>
   </div>
 </div>
+<ng-template #notFound>
+  <app-not-found></app-not-found>
+</ng-template>

@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { Status } from '../../../../../shared/enums/enum';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../../../services/common.service';
+import { HeaderService } from '../../../../../services/header.service';
 @Component({
   selector: 'app-reg-settlement',
   templateUrl: './reg-settlement.component.html',
@@ -34,7 +35,8 @@ export class RegSettlementComponent {
   message = '';
   @ViewChild('success') success: ElementRef;
   constructor(private _registerSettlementService: RegisterSettlementService,
-    private _transactionHistoryService: TransactionHistoryService, private _commonService: CommonService,
+    private _commonService: CommonService,
+    private _headerService: HeaderService,
     private fb: FormBuilder, public datepipe: DatePipe, private modalService: NgbModal) {
   }
   initFilterForm() {
@@ -47,6 +49,7 @@ export class RegSettlementComponent {
     })
   }
   ngOnInit() {
+    this._headerService.setTitle(' Register Settlements');
     this.getAllSessions(this.filterParams);
     this.getBaranches();
     this.getEmployees();
@@ -79,8 +82,13 @@ export class RegSettlementComponent {
       this.getAllSessions(this.filterParams)
     })
   }
-  handleSettle(sessionId) {
-    this._commonService.NavigateToRoute("register-settlements/settle/", sessionId);
+  navigateTo(value, sessionId) {
+    if (value == 'settle') {
+      this._commonService.NavigateToRoute("register-settlements/settle/", sessionId);
+    }
+    else if (value == 'session') {
+      this._commonService.NavigateToRoute("register-settlements/session/", sessionId);
+    }
   }
   openModal(content, item) {
     this.radioValue = '';
@@ -148,6 +156,7 @@ export class RegSettlementComponent {
     let defaultParams = `pageNo=${this.pageNo}&sort=${this.sort}&pageSize=${this.pageSize}`
     this._registerSettlementService.getAllSessions((filterParams && filterParams + `&${defaultParams}`) || (`?${defaultParams}`)).subscribe(response => {
       this.sessionList = response?.data;
+      console.log(this.sessionList);
       this.totalRecords = response?.totalRecordCount;
       this.pagin = Math.ceil(this.totalRecords / 6);
       this.pages = _.range(this.pagin);

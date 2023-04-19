@@ -31,12 +31,13 @@
                   <th scope="col"> Amount </th>
                   <th scope="col"> Invoice Number</th>
                   <th scope="col"> Bank</th>
+                  <th scope="col" *ngIf="!isSettle"> Status </th>
                   <th scope="col"> Action </th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of sessionCards" [class.highlight-tr]="item?.wrongActionInClosing">
-                  <ng-container *ngIf="item.settleActionTaken && item.settleActionType == 'edit';else cardDetails">
+                  <ng-container *ngIf="item.settleActionTaken && item.settleActionType == 'edit' && isSettle;else cardDetails">
                     <td> {{ item?.settleDrawerName}}</td>
                     <td> {{item?.cardTerminalId}} </td>
                     <td> {{ item?.cardCollectionJod}} JD</td>
@@ -44,14 +45,26 @@
                     <td> {{ item?.settleBank[0]?.lookupName  }}</td>
                   </ng-container>
                   <ng-template #cardDetails>
-
                     <td> {{ item?.customer?.customerName}}</td>
                     <td> {{item?.cardTerminalId}} </td>
                     <td> {{ item?.cardCollectionJod}} JD</td>
                     <td> {{ item?.cardInvoiceNo }}</td>
                     <td> {{ item.bank[0]?.lookupName }}</td>
+                    <ng-container *ngIf="!isSettle">
+                      <td>
+                        <div class="status-tag" [ngStyle]="{
+                          'background': item?.statusObj?.lookupBGColor,
+                           'color': item?.statusObj?.lookupTextColor
+                        }">
+                          {{ item?.statusObj?.translations[0]?.lookupName }}
+                        </div>
+                      </td>
+                      <td>
+                        <i class="fa-regular fa-eye cursor-pointer" (click)="handleCardDetails(item,sessionCardDetails)"></i>
+                      </td>
+                    </ng-container>
                   </ng-template>
-                  <td>
+                  <td *ngIf="isSettle">
                     <ng-container *ngIf="item.settleActionTaken;else elseBlock">
                       <button class="btn btn-undo" (click)="hadleReverseActionOnCard(item?.ordersCardsCollectionId)">
                         Undo <img src="assets/images/undo.png" alt="">
@@ -232,6 +245,56 @@
     </div>
   </form>
 </ng-template>
+<ng-template #sessionCardDetails let-modal>
+  <div class="fc-modal p-4 custom-form-input">
+    <div class="modal-header p-0 flex-column align-items-start">
+      <h4 class="modal-title fw-bolder pb-1" ngbAutofocus>Card Details</h4>
+      <h6 class="pb-2 fw-600">Customer Name: <span class="light-gray">{{cardDetails?.customer?.customerName}}</span></h6>
+    </div>
+    <div class="modal-body p-0">
+      <div class="row mt-3">
+        <div class="col-sm-4">
+          <label>Paid Amount</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardCollectionJod}}</h6>
+        </div>
+        <div class="col-sm-4">
+          <label>First 6 Digits of the Card</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardFirst6Digits}}</h6>
+        </div>
+        <div class="col-sm-4">
+          <label>Last 4 Digits of the Card</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardLast4Digits}}</h6>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-4">
+          <label>Invoice No</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardInvoiceNo}}</h6>
+        </div>
+        <div class="col-sm-4">
+          <label>Terminal ID</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardTerminalId}}</h6>
+        </div>
+        <div class="col-sm-4">
+          <label>Bank Name</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.bank[0]?.lookupName }}</h6>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-4">
+          <label>Payer Name</label>
+          <h6 class="pb-2 fw-600 light-gray">{{cardDetails?.cardPayerName}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer p-4">
+    <div class="btns-group">
+      <button type="submit" class="btn btn-save" (click)="modal.close('Save click')">Close</button>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #successModal let-modal>
   <div class="modal-body">
     <!--<h5 *ngIf="response?.Errors" class="text-danger m-0 py-5 text-center"><i class="fa-regular fa-circle-xmark me-2"></i>{{response?.Errors[0].ErrorMessageEn}}</h5>-->

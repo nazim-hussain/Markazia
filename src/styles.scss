@@ -992,6 +992,10 @@ input.form-control:focus {
     font-size: 14px;
   }
 
+  .sd-item {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(179px,1fr));
+  }
 }
   .custom-form-input {
     label {
